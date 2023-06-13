@@ -11,7 +11,7 @@ public class EasyRpcRequest {
     /**
      * 需要调用远程的Bean的别名
      */
-    private String alias;       //别名
+    private String beanRef;       //别名
     /**
      * 需要调用的方法
      */
@@ -25,19 +25,24 @@ public class EasyRpcRequest {
      */
     private Object[] args;      //入参
 
+
+    public EasyRpcRequest(){
+
+    }
+
     public EasyRpcRequest(String alias, String methodName, Class[] paramTypes, Object[] args) {
-        this.alias = alias;
+        this.beanRef = alias;
         this.methodName = methodName;
         this.paramTypes = paramTypes;
         this.args = args;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getBeanRef() {
+        return beanRef;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setBeanRef(String alias) {
+        this.beanRef = alias;
     }
 
     public String getMethodName() {

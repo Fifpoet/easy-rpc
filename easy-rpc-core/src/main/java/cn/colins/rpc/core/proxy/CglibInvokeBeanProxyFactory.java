@@ -12,8 +12,13 @@ import net.sf.cglib.proxy.Enhancer;
  **/
 public class CglibInvokeBeanProxyFactory {
 
-    public static <T> T getProxy(Class<T> interfaceClass,String serviceId) throws Exception {
-        return (T)Enhancer.create(interfaceClass, new CglibInvocationHandler(serviceId));
+    /**
+     * @Author colins
+     * @Description  获取客户端远程调用代理对象
+     * @return T
+     **/
+    public static <T> T getClientInvokeProxy(Class<T> interfaceClass, String serviceId, String beanRef) throws Exception {
+        return (T) Enhancer.create(interfaceClass, new CglibInvocationHandler(serviceId, beanRef));
     }
 
 }

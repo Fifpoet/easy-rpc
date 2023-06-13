@@ -21,16 +21,19 @@ public class ServiceInvokeBean<T> implements FactoryBean {
 
     private final String serviceId;
 
+    private final String beanRef;
+
     private final Class<T> interfaceClass;
 
-    public ServiceInvokeBean(String serviceId, Class<T> interfaceClass) {
+    public ServiceInvokeBean(String serviceId, String beanRef, Class<T> interfaceClass) {
         this.serviceId = serviceId;
         this.interfaceClass = interfaceClass;
+        this.beanRef = beanRef;
     }
 
     @Override
     public Object getObject() throws Exception {
-        return CglibInvokeBeanProxyFactory.getProxy(interfaceClass,serviceId);
+        return CglibInvokeBeanProxyFactory.getClientInvokeProxy(interfaceClass, serviceId,beanRef);
     }
 
     @Override

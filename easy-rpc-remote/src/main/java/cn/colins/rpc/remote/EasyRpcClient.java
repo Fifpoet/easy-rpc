@@ -3,6 +3,7 @@ package cn.colins.rpc.remote;
 import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
 import cn.colins.rpc.remote.config.EasyRpcClientConfig;
 import cn.colins.rpc.remote.entiy.EasyRpcRequest;
+import cn.colins.rpc.remote.exception.EasyRpcRemoteException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -35,38 +36,43 @@ public class EasyRpcClient {
     public EasyRpcClient(EasyRpcClientConfig rpcClientConfig, ChannelInitializer channelInitializer) {
         this.rpcClientConfig = rpcClientConfig;
         this.channelInitializer = channelInitializer;
+        this.group = new NioEventLoopGroup();
     }
 
-    public void rpcClientStart() {
-        group = new NioEventLoopGroup();
-        try {
-            Bootstrap bootstrap = new Bootstrap();
-            // 客户端不需要处理连接 所以一个线程组就够了
-            bootstrap.group(group)
-                    // 连接通道
-                    .channel(NioSocketChannel.class)
-                    .remoteAddress(rpcClientConfig.getAddress(), rpcClientConfig.getPort())
-                    .option(ChannelOption.TCP_NODELAY, true)
-                    // 数据处理
-                    .handler(channelInitializer);
+    public ChannelFuture connect() {
+        Bootstrap bootstrap = new Bootstrap();
+        // 客户端不需要处理连接 所以一个线程组就够了
+        bootstrap.group(group)
+                // 连接通道
+                .channel(NioSocketChannel.class)
+                .remoteAddress(rpcClientConfig.getAddress(), rpcClientConfig.getPort())
+                .option(ChannelOption.TCP_NODELAY, true)
+                // 数据处理
+                .handler(channelInitializer);
 
-            ChannelFuture future = bootstrap.connect();
+        ChannelFuture future = bootstrap.connect();
+        return future;
+    }
+
+    public void syncWaitClose(ChannelFuture future) throws EasyRpcRemoteException {
+        try {
             future.addListener(event -> {
                 if (event.isSuccess()) {
                     EasyRpcRequest easyRpcRequest = new EasyRpcRequest();
-                    easyRpcRequest.setAlias("test");
+                    easyRpcRequest.setBeanRef("test");
                     easyRpcRequest.setParamTypes(new Class[]{String.class,String.class});
                     easyRpcRequest.setArgs(new Object[]{"1111","3333"});
                     future.channel().writeAndFlush(new RpcRemoteMsg(easyRpcRequest));
                     log.info("连接Easy-Rpc Server 成功,地址：{},端口：{}", rpcClientConfig.getAddress(), rpcClientConfig.getPort());
                 } else {
-                    log.info("Easy-Rpc Client connect server fail");
+                    throw new EasyRpcRemoteException(String.format("Easy-Rpc connect server:[ %s:%d ] fail",rpcClientConfig.getAddress(), rpcClientConfig.getPort()));
                 }
             });
             future.channel().closeFuture().sync();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             log.error("Easy-Rpc Client start error：{},{}", e.getMessage(), e);
-        } finally {
+            throw new EasyRpcRemoteException(e.getMessage());
+        }finally {
             destroy();
         }
     }

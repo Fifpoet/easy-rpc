@@ -3,10 +3,12 @@ package cn.colins.rpc.remote;
 import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
 import cn.colins.rpc.remote.config.EasyRpcClientConfig;
 import cn.colins.rpc.remote.entiy.EasyRpcRequest;
+import cn.colins.rpc.remote.exception.EasyRpcRemoteException;
 import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
 import cn.colins.rpc.remote.handler.EasyRpcServerHandlerInit;
 import cn.colins.rpc.remote.utils.EncryptUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.netty.channel.ChannelFuture;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ public class RemoteTest {
     @Test
     public void test(){
         EasyRpcRequest easyRpcRequest = new EasyRpcRequest();
-        easyRpcRequest.setAlias("test");
+        easyRpcRequest.setBeanRef("test");
         easyRpcRequest.setParamTypes(new Class[]{String.class,String.class});
         easyRpcRequest.setArgs(new Object[]{"1111","3333"});
 
@@ -37,7 +39,6 @@ public class RemoteTest {
 
 //        log.info("解密后:{},{}", EncryptUtil.decryptMsg(rpcRemoteMsg.getEncryptSequence(),rpcRemoteMsg.getContent()));
 
-
     }
 
     @Test
@@ -47,11 +48,12 @@ public class RemoteTest {
     }
 
     @Test
-    public void clientTest(){
+    public void clientTest() throws EasyRpcRemoteException {
         EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
         easyRpcClientConfig.setAddress("127.0.0.1");
         easyRpcClientConfig.setPort(1111);
         EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig,new EasyRpcClientHandlerInit());
-        easyRpcClient.rpcClientStart();
+        ChannelFuture connect = easyRpcClient.connect();
+        easyRpcClient.syncWaitClose(connect);
     }
 }

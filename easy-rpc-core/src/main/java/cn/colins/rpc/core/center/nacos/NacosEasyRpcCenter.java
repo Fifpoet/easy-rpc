@@ -52,7 +52,7 @@ public class NacosEasyRpcCenter implements EasyRpcCenter {
         this.applicationConfig = rpcApplicationConfig;
         this.centerConfig = centerConfig;
         Properties properties = new Properties();
-        properties.setProperty("serverAddr", String.format("%d:%d", centerConfig.getAddress(), centerConfig.getPort()));
+        properties.setProperty("serverAddr", String.format("%s:%d", centerConfig.getAddress(), centerConfig.getPort()));
         properties.setProperty("namespace", StrUtil.emptyToDefault(centerConfig.getNamespace(), DEFAULT_NAMESPACE));
         try {
             this.nacosNamingService = new NacosNamingService(properties);
