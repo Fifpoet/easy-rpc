@@ -7,11 +7,16 @@ import cn.colins.rpc.remote.exception.EasyRpcRemoteException;
 import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
 import cn.colins.rpc.remote.handler.EasyRpcServerHandlerInit;
 import cn.colins.rpc.remote.utils.EncryptUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelFuture;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.Executors;
 
 /**
  * @Description
@@ -22,27 +27,15 @@ import org.slf4j.LoggerFactory;
  */
 
 public class RemoteTest {
-    private final static Logger log= LoggerFactory.getLogger(RemoteTest.class);
+    private final static Logger log = LoggerFactory.getLogger(RemoteTest.class);
 
     @Test
-    public void test(){
-        EasyRpcRequest easyRpcRequest = new EasyRpcRequest();
-        easyRpcRequest.setBeanRef("test");
-        easyRpcRequest.setParamTypes(new Class[]{String.class,String.class});
-        easyRpcRequest.setArgs(new Object[]{"1111","3333"});
-
-        RpcRemoteMsg rpcRemoteMsg = new RpcRemoteMsg(easyRpcRequest);
-        log.info("加密前：{},{},{}", JSONObject.toJSON(easyRpcRequest),rpcRemoteMsg.getContentLength(),JSONObject.toJSONBytes(easyRpcRequest).length);
-
-
-        System.out.println(EncryptUtil.decryptMsg(1,EncryptUtil.encryptMsg(1,JSONObject.toJSONBytes(easyRpcRequest))));;
-
-//        log.info("解密后:{},{}", EncryptUtil.decryptMsg(rpcRemoteMsg.getEncryptSequence(),rpcRemoteMsg.getContent()));
-
+    public void test() {
+        Assert.notNull(null, "application name cannot be empty");
     }
 
     @Test
-    public void serverTest(){
+    public void serverTest() {
         EasyRpcServer easyRpcServer = new EasyRpcServer(1111, new EasyRpcServerHandlerInit());
         easyRpcServer.rpcServerStart();
     }
@@ -52,8 +45,9 @@ public class RemoteTest {
         EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
         easyRpcClientConfig.setAddress("127.0.0.1");
         easyRpcClientConfig.setPort(1111);
-        EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig,new EasyRpcClientHandlerInit());
+        EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig, new EasyRpcClientHandlerInit());
         ChannelFuture connect = easyRpcClient.connect();
-        easyRpcClient.syncWaitClose(connect);
+        Executors.newCachedThreadPool().execute(easyRpcClient);
+        while (true){}
     }
 }

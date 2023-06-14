@@ -7,18 +7,9 @@ package cn.colins.rpc.remote.config;
  * @Since 1.0
  * @Date 2023/6/12
  */
-public class EasyRpcClientConfig {
-    private String address;
-    private int port;
+public class EasyRpcServerConfig {
 
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    private int port=11111;
 
     public int getPort() {
         return port;

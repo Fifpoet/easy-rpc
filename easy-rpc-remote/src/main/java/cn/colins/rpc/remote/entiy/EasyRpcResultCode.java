@@ -18,6 +18,11 @@ public enum EasyRpcResultCode {
     /**
      * 服务器异常
      */
+    TIME_OUT(401, "请求超时"),
+
+    /**
+     * 服务器异常
+     */
     SERVER_ERROR(500, "请求服务器异常"),
 
     /**

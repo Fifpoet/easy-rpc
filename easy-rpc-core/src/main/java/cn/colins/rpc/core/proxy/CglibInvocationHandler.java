@@ -26,9 +26,12 @@ public class CglibInvocationHandler implements InvocationHandler {
 
     private final String beanRef;
 
-    public CglibInvocationHandler(String serviceId, String beanRef) {
+    private final String interfaces;
+
+    public CglibInvocationHandler(String serviceId, String beanRef, String interfaces) {
         this.serviceId = serviceId;
         this.beanRef = beanRef;
+        this.interfaces = interfaces;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class CglibInvocationHandler implements InvocationHandler {
         }
 
         // 构建请求参数
-        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(beanRef, method.getName(), method.getParameterTypes(), objects);
+        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
         // 获取会话
         EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(serviceId, easyRpcRequest, serviceInstanceList);
         return easyRpcSession.exec();

@@ -3,12 +3,14 @@ package cn.colins.rpc.core.session;
 import cn.colins.rpc.core.domain.ServiceInstance;
 import cn.colins.rpc.core.executor.impl.BaseEasyRpcExecutor;
 import cn.colins.rpc.core.session.defaults.DefaultEasyRpcSession;
+
 import cn.colins.rpc.remote.EasyRpcClient;
 import cn.colins.rpc.remote.config.EasyRpcClientConfig;
 import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import cn.colins.rpc.remote.entiy.EasyRpcRequest;
 import cn.colins.rpc.remote.exception.EasyRpcRemoteException;
 import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
+import cn.colins.rpc.remote.utils.ThreadPoolUtils;
 import io.netty.channel.ChannelFuture;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class EasyRpcSessionFactory {
 
     public static EasyRpcSessionFactory getInstance(){
         if(rpcSessionFactory==null){
-            synchronized (rpcSessionFactory){
+            synchronized (EasyRpcSessionFactory.class){
                 if(rpcSessionFactory==null){
                     rpcSessionFactory=new EasyRpcSessionFactory();
                 }
@@ -44,20 +46,17 @@ public class EasyRpcSessionFactory {
         ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(serviceId);
         // 管道不存在就需要新建连接
         if(clientChannel==null){
-            synchronized (clientChannel){
+            synchronized (serviceInstance){
                 if(clientChannel==null){
                     EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
                     easyRpcClientConfig.setAddress(serviceInstance.getIp());
                     easyRpcClientConfig.setPort(serviceInstance.getPort());
                     EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig,new EasyRpcClientHandlerInit());
                     clientChannel = easyRpcClient.connect();
-
-                    // 待处理
-                    try {
-                        easyRpcClient.syncWaitClose(clientChannel);
-                    } catch (EasyRpcRemoteException e) {
-                        e.printStackTrace();
-                    }
+                    // 异步等待关闭
+                    ThreadPoolUtils.startNettyPool.execute(easyRpcClient);
+                    // 添加缓存
+                    EasyRpcRemoteContext.registerClientChannel(serviceId,clientChannel);
                 }
             }
         }

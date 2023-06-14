@@ -18,7 +18,7 @@ import java.net.InetSocketAddress;
  * @Since 1.0
  * @Date 2023/6/12
  */
-public class EasyRpcServer {
+public class EasyRpcServer implements Runnable{
     private final static Logger log= LoggerFactory.getLogger(EasyRpcClient.class);
 
     private NioEventLoopGroup bossGroup = null;
@@ -36,7 +36,7 @@ public class EasyRpcServer {
     public void rpcServerStart(){
         try {
             bossGroup = new NioEventLoopGroup();
-            workerGroup = new NioEventLoopGroup();
+            workerGroup = new NioEventLoopGroup(6);
             // 服务端启动类
             ServerBootstrap bootstrap = new ServerBootstrap();
             // 传入两个线程组
@@ -75,4 +75,8 @@ public class EasyRpcServer {
         }
     }
 
+    @Override
+    public void run() {
+        this.rpcServerStart();
+    }
 }

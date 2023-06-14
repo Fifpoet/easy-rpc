@@ -1,9 +1,8 @@
 package cn.colins.rpc.remote.handler.client;
 
-import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
+import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import cn.colins.rpc.remote.entiy.EasyRpcResponse;
-import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
+import cn.colins.rpc.remote.future.impl.SyncEasyRpcWriteFuture;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,6 +31,10 @@ public class EasyRpcClientHandler extends SimpleChannelInboundHandler<EasyRpcRes
     @Override
     protected void channelRead0(ChannelHandlerContext context, EasyRpcResponse rpcResponse) throws Exception {
         log.info("客户端->接收到数据：{}",JSONObject.toJSONString(rpcResponse));
+        SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
+        if(requestCache!=null){
+            requestCache.setResponse(rpcResponse);
+        }
 
     }
 

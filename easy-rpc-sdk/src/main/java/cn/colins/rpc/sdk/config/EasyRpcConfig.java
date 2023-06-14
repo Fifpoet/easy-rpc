@@ -2,6 +2,7 @@ package cn.colins.rpc.sdk.config;
 
 import cn.colins.rpc.core.config.EasyRpcApplicationConfig;
 import cn.colins.rpc.core.config.EasyRpcCenterConfig;
+import cn.colins.rpc.remote.config.EasyRpcServerConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -16,9 +17,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class EasyRpcConfig {
 
     @NestedConfigurationProperty
-    private EasyRpcApplicationConfig application=new EasyRpcApplicationConfig();
+    private EasyRpcServerConfig protocol = new EasyRpcServerConfig();
     @NestedConfigurationProperty
-    private EasyRpcCenterConfig center=new EasyRpcCenterConfig();
+    private EasyRpcApplicationConfig application = new EasyRpcApplicationConfig();
+    @NestedConfigurationProperty
+    private EasyRpcCenterConfig center = new EasyRpcCenterConfig();
 
     public EasyRpcApplicationConfig getApplication() {
         return application;
@@ -34,5 +37,13 @@ public class EasyRpcConfig {
 
     public void setCenter(EasyRpcCenterConfig center) {
         this.center = center;
+    }
+
+    public EasyRpcServerConfig getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(EasyRpcServerConfig protocol) {
+        this.protocol = protocol;
     }
 }

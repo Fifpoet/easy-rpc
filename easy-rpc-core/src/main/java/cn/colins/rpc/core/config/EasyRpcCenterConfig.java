@@ -1,5 +1,8 @@
 package cn.colins.rpc.core.config;
 
+import cn.hutool.core.util.StrUtil;
+import org.springframework.util.Assert;
+
 /**
  * @Description
  * @Author czl
@@ -9,13 +12,21 @@ package cn.colins.rpc.core.config;
  */
 public class EasyRpcCenterConfig {
 
-    /** 注册中心地址 */
+    /**
+     * 注册中心地址
+     */
     private String address;
-    /** 注册中心端口 */
-    private int port;
-    /** 注册中心命名空间 */
+    /**
+     * 注册中心端口
+     */
+    private int port = 8848;
+    /**
+     * 注册中心命名空间
+     */
     private String namespace;
-    /** 注册中心分组 */
+    /**
+     * 注册中心分组
+     */
     private String group;
 
     public String getAddress() {
@@ -48,5 +59,6 @@ public class EasyRpcCenterConfig {
 
     public void setGroup(String group) {
         this.group = group;
+
     }
 }

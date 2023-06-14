@@ -8,7 +8,7 @@ import cn.colins.rpc.core.config.EasyRpcCenterConfig;
 import cn.colins.rpc.core.domain.ServiceInstance;
 import cn.colins.rpc.core.domain.ServiceMetaData;
 import cn.colins.rpc.core.exception.EasyRpcRunException;
-import cn.colins.rpc.core.utils.ThreadPoolUtils;
+import cn.colins.rpc.remote.utils.ThreadPoolUtils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.StrUtil;
@@ -23,6 +23,7 @@ import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.client.naming.NacosNamingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -49,6 +50,8 @@ public class NacosEasyRpcCenter implements EasyRpcCenter {
     private EasyRpcCenterConfig centerConfig;
 
     public NacosEasyRpcCenter(EasyRpcCenterConfig centerConfig, EasyRpcApplicationConfig rpcApplicationConfig) {
+        Assert.isTrue(StrUtil.isNotEmpty(centerConfig.getAddress()), "registry address cannot be empty");
+        Assert.isTrue(StrUtil.isNotEmpty(centerConfig.getGroup()), "registry group cannot be empty");
         this.applicationConfig = rpcApplicationConfig;
         this.centerConfig = centerConfig;
         Properties properties = new Properties();

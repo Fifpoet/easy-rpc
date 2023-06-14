@@ -1,5 +1,8 @@
 package cn.colins.rpc.core.config;
 
+import cn.hutool.core.util.StrUtil;
+import org.springframework.util.Assert;
+
 /**
  * @Description
  * @Author czl
@@ -17,5 +20,6 @@ public class EasyRpcApplicationConfig {
 
     public void setName(String name) {
         this.name = name;
+        Assert.isTrue(StrUtil.isNotEmpty(this.name), "application name cannot be empty");
     }
 }
