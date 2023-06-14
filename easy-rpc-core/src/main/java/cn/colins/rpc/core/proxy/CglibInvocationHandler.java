@@ -11,6 +11,7 @@ import net.sf.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Description 代理处理类
@@ -42,7 +43,7 @@ public class CglibInvocationHandler implements InvocationHandler {
         }
 
         // 构建请求参数
-        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
+        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(),beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
         // 获取会话
         EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(serviceId, easyRpcRequest, serviceInstanceList);
         return easyRpcSession.exec();

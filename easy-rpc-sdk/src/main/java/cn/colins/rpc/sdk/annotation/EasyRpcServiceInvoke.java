@@ -8,7 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 @Inherited
-@Component
 public @interface EasyRpcServiceInvoke {
 
     String serviceId();

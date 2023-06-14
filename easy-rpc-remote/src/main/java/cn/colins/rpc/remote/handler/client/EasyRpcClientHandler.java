@@ -30,7 +30,7 @@ public class EasyRpcClientHandler extends SimpleChannelInboundHandler<EasyRpcRes
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, EasyRpcResponse rpcResponse) throws Exception {
-        log.info("客户端->接收到数据：{}",JSONObject.toJSONString(rpcResponse));
+        // 可以异步处理
         SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
         if(requestCache!=null){
             requestCache.setResponse(rpcResponse);

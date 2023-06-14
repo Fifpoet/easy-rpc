@@ -23,4 +23,9 @@ public class EasyRpcTestController {
         easyRpcTest.test();
         return "ok";
     }
+
+    @GetMapping("/test1")
+    public String test1(String aa){
+        return easyRpcTest.test1(aa);
+    }
 }

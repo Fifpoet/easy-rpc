@@ -9,11 +9,14 @@ import java.util.concurrent.TimeoutException;
 
 public interface EasyRpcWriteFuture<T> extends Future<T> {
 
-    T writeAndSync(final ChannelFuture channelFuture, final EasyRpcRequest easyRpcRequest) throws TimeoutException, InterruptedException;
+    EasyRpcResponse write(ChannelFuture channelFuture, EasyRpcRequest easyRpcRequest) throws TimeoutException, InterruptedException;
 
     void setResponse(EasyRpcResponse response);
 
     T getResponse();
 
     boolean isTimeout();
+
+    long getTimeout();
+
 }

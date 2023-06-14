@@ -21,7 +21,7 @@ public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcRespons
 
 
 
-    private CountDownLatch latch = new CountDownLatch(1);
+    private CountDownLatch latch;
     /**
      * 开始时间戳
      */
@@ -48,23 +48,17 @@ public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcRespons
         this.requestId = requestId;
         this.timeout = timeout;
         this.isTimeout = timeout <= 0L ? false : true;
+        this.latch = new CountDownLatch(1);
     }
 
     @Override
-    public EasyRpcResponse writeAndSync(ChannelFuture channelFuture, EasyRpcRequest easyRpcRequest) throws TimeoutException, InterruptedException {
-        EasyRpcRemoteContext.addRequestCache(requestId,this);
-        channelFuture.channel().writeAndFlush(new RpcRemoteMsg(easyRpcRequest)).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                // 发送失败移除缓存
-                if (!channelFuture.isSuccess()) {
-                    EasyRpcRemoteContext.removeRequestCache(requestId);
-                }
-            }
-        });
+    public EasyRpcResponse write(ChannelFuture channelFuture, EasyRpcRequest easyRpcRequest) throws TimeoutException, InterruptedException {
+        EasyRpcRemoteContext.addRequestCache(easyRpcRequest.getRequestId(),this);
+        channelFuture.channel().writeAndFlush(new RpcRemoteMsg(easyRpcRequest));
         EasyRpcResponse easyRpcResponse = isTimeout ? this.get(timeout, TimeUnit.MILLISECONDS) : this.get();
         return easyRpcResponse;
     }
+
 
     @Override
     public void setResponse(EasyRpcResponse response) {
@@ -89,6 +83,12 @@ public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcRespons
     }
 
     @Override
+    public long getTimeout() {
+        return this.timeout;
+    }
+
+
+    @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         return true;
     }
@@ -106,7 +106,7 @@ public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcRespons
     @Override
     public EasyRpcResponse get() throws InterruptedException {
         // 获取的时候就需要等待阻塞 等待响应被唤醒
-        latch.wait();
+        latch.await();
         return easyRpcResponse;
     }
 

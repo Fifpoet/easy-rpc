@@ -18,7 +18,7 @@ public class EasyRpcTestImpl implements EasyRpcTest {
     }
 
     @Override
-    public void test1(String aa) {
-
+    public String test1(String aa) {
+        return aa;
     }
 }

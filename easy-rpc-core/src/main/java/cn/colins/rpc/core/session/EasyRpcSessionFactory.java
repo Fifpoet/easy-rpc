@@ -14,6 +14,7 @@ import cn.colins.rpc.remote.utils.ThreadPoolUtils;
 import io.netty.channel.ChannelFuture;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @Author colins
@@ -40,9 +41,19 @@ public class EasyRpcSessionFactory {
     }
 
     public EasyRpcSession openSession(String serviceId,EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList){
+        // 这里可以尝试用 CompletableFuture 异步编排  获取服务  获取通信管道 -> 调用
+
         // 负载、路由、、、、拓展点 SPI机制
         ServiceInstance serviceInstance = serviceInstanceList.get(0);
         // 获取通信管道
+        ChannelFuture channelFuture = getChannelFuture(serviceId, serviceInstance);
+        // session里面就是调用执行器执行  可以拓展过滤器、集群策略
+        return new DefaultEasyRpcSession(new BaseEasyRpcExecutor(),rpcRequest,serviceInstance,channelFuture);
+    }
+
+
+
+    private ChannelFuture getChannelFuture(String serviceId,ServiceInstance serviceInstance){
         ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(serviceId);
         // 管道不存在就需要新建连接
         if(clientChannel==null){
@@ -60,7 +71,7 @@ public class EasyRpcSessionFactory {
                 }
             }
         }
-        return new DefaultEasyRpcSession(new BaseEasyRpcExecutor(),rpcRequest,serviceInstance,clientChannel);
+        return clientChannel;
     }
 
 }

@@ -39,7 +39,7 @@ public class EasyRpcClient implements Runnable{
     public EasyRpcClient(EasyRpcClientConfig rpcClientConfig, ChannelInitializer channelInitializer) {
         this.rpcClientConfig = rpcClientConfig;
         this.channelInitializer = channelInitializer;
-        this.group = new NioEventLoopGroup(3);
+        this.group = new NioEventLoopGroup();
     }
 
     public ChannelFuture connect() {

@@ -12,7 +12,7 @@ import cn.colins.rpc.remote.entiy.EasyRpcResponse;
  **/
 public interface EasyRpcSession {
 
-    EasyRpcResponse exec();
+    Object exec();
 
     EasyRpcRequest getRpcRequest();
 

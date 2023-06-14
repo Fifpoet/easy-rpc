@@ -33,6 +33,7 @@ public class EasyRpcPublishBeanPostProcessor implements InstantiationAwareBeanPo
             }
             // 添加发布服务bean 缓存
             EasyRpcRemoteContext.registerProducerCache(beanName,bean);
+            EasyRpcRemoteContext.registerProducerTypeCache(beanName,interfaces[0].getName());
             // 添加需要发布的元数据
             EasyRpcSpringConstant.serviceMetaDataList.add(new ServiceMetaData(interfaces[0],beanName));
         }

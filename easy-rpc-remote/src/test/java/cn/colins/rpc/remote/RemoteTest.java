@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 /**
@@ -31,7 +32,10 @@ public class RemoteTest {
 
     @Test
     public void test() {
-        Assert.notNull(null, "application name cannot be empty");
+        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(),"easyRpcTest", "cn.colins.rpc.EasyRpcTest", "test1", null, null);
+        String s = JSONObject.toJSONString(easyRpcRequest);
+        System.out.println(s);
+        System.out.println(JSONObject.toJSONString(JSONObject.parseObject(s,EasyRpcRequest.class)));
     }
 
     @Test

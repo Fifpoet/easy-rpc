@@ -4,5 +4,5 @@ public interface EasyRpcTest {
 
     void test();
 
-    void test1(String aa);
+    String test1(String aa);
 }

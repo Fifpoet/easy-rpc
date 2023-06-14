@@ -31,8 +31,9 @@ public class DefaultEasyRpcSession implements EasyRpcSession {
     }
 
     @Override
-    public EasyRpcResponse exec() {
-        return rpcExecutor.executor(future,easyRpcRequest,serviceInstance);
+    public Object exec() {
+        EasyRpcResponse executor = rpcExecutor.executor(future, easyRpcRequest, serviceInstance);
+        return executor.getData();
     }
 
     @Override

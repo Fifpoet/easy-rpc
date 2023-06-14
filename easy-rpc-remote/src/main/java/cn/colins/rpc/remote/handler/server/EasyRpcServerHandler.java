@@ -40,7 +40,7 @@ public class EasyRpcServerHandler extends SimpleChannelInboundHandler<EasyRpcReq
                 //调用
                 Class<?> classType = Class.forName(rpcRequest.getInterfaces());
                 Method addMethod = classType.getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
-                Object objectBean = EasyRpcRemoteContext.getProducerBean(rpcRequest.getBeanRef());
+                Object objectBean = EasyRpcRemoteContext.getProducerBean(rpcRequest.getBeanRef(),rpcRequest.getInterfaces());
                 Object result = addMethod.invoke(objectBean, rpcRequest.getArgs());
                 //反馈
                 sendResponse(channel, EasyRpcResponse.success(rpcRequest.getRequestId(), result));
@@ -48,7 +48,7 @@ public class EasyRpcServerHandler extends SimpleChannelInboundHandler<EasyRpcReq
                 ReferenceCountUtil.release(rpcRequest);
             } catch (Exception e) {
                 log.error("Easy-Rpc handler msg:[ interfaces:{} method:{} args:{} ] error:{} "
-                        , rpcRequest.getInterfaces(), rpcRequest.getMethodName(), rpcRequest.getArgs().toString(), e.getMessage(), e);
+                        , rpcRequest.getInterfaces(), rpcRequest.getMethodName(), JSONObject.toJSON(rpcRequest.getArgs()), e.getMessage(), e);
                 //反馈
                 sendResponse(channel, EasyRpcResponse.error(rpcRequest.getRequestId(), e));
             }

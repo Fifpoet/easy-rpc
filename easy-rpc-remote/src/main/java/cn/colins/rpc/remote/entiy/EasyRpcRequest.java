@@ -40,12 +40,9 @@ public class EasyRpcRequest {
     private Object[] args;      //入参
 
 
-    public EasyRpcRequest() {
-        this.requestId = UUID.randomUUID().toString();
-    }
 
-    public EasyRpcRequest(String beanRef, String interfaces, String methodName, Class[] paramTypes, Object[] args) {
-        this.requestId = UUID.randomUUID().toString();
+    public EasyRpcRequest(String requestId,String beanRef, String interfaces, String methodName, Class[] paramTypes, Object[] args) {
+        this.requestId = requestId;
         this.beanRef = beanRef;
         this.interfaces = interfaces;
         this.methodName = methodName;
