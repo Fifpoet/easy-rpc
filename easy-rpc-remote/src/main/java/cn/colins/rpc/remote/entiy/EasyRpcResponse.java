@@ -1,5 +1,7 @@
 package cn.colins.rpc.remote.entiy;
 
+import java.io.Serializable;
+
 /**
  * @Description
  * @Author czl
@@ -7,7 +9,7 @@ package cn.colins.rpc.remote.entiy;
  * @Since 1.0
  * @Date 2023/6/12
  */
-public class EasyRpcResponse {
+public class EasyRpcResponse implements Serializable {
     private String requestId;
     private int code;
     private String msg;

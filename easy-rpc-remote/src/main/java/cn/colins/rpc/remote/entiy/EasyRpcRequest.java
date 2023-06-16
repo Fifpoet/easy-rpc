@@ -1,5 +1,6 @@
 package cn.colins.rpc.remote.entiy;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -9,10 +10,7 @@ import java.util.UUID;
  * @Since 1.0
  * @Date 2023/6/12
  */
-public class EasyRpcRequest {
-
-    private EasyRpcResponse response;
-
+public class EasyRpcRequest implements Serializable {
     /**
      * 客户端需要同步获取响应结果 每个消息需要唯一标识
      */

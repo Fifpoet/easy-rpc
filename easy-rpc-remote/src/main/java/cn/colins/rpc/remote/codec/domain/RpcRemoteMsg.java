@@ -3,8 +3,11 @@ package cn.colins.rpc.remote.codec.domain;
 import cn.colins.rpc.remote.entiy.EasyRpcRequest;
 import cn.colins.rpc.remote.entiy.EasyRpcResponse;
 import cn.colins.rpc.remote.utils.EncryptUtil;
+import cn.colins.rpc.remote.utils.HessianUtils;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
+
+import java.io.Serializable;
 
 /**
  * @Description
@@ -13,7 +16,7 @@ import com.alibaba.fastjson.JSONObject;
  * @Since 1.0
  * @Date 2023/6/12
  */
-public class RpcRemoteMsg {
+public class RpcRemoteMsg implements Serializable {
     // 消息体开头标记
     private short startSign = (short) 0x01F1;
     // 时间戳
@@ -31,7 +34,7 @@ public class RpcRemoteMsg {
         this.timeStamp = (int) (DateUtil.current() / 1000);
         this.encryptSequence = EncryptUtil.getRandomKeyIndex();
         this.msgType = (short) 0;
-        this.content = EncryptUtil.encryptMsg(this.encryptSequence, JSONObject.toJSONBytes(rpcRequest));
+        this.content = EncryptUtil.encryptMsg(this.encryptSequence, HessianUtils.toBytes(rpcRequest));
         this.contentLength = this.content.length;
     }
 
@@ -39,7 +42,7 @@ public class RpcRemoteMsg {
         this.timeStamp = (int) (DateUtil.current() / 1000);
         this.encryptSequence = EncryptUtil.getRandomKeyIndex();
         this.msgType = (short) 1;
-        this.content = EncryptUtil.encryptMsg(this.encryptSequence, JSONObject.toJSONBytes(rpcResponse));
+        this.content = EncryptUtil.encryptMsg(this.encryptSequence, HessianUtils.toBytes(rpcResponse));
         this.contentLength = this.content.length;
     }
 
@@ -74,4 +77,6 @@ public class RpcRemoteMsg {
     public short getStartSign() {
         return startSign;
     }
+
+
 }

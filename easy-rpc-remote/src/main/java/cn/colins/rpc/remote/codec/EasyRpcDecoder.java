@@ -1,15 +1,7 @@
 package cn.colins.rpc.remote.codec;
 
 
-import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.entiy.EasyRpcResponse;
-import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
 import cn.colins.rpc.remote.utils.EncryptUtil;
-import com.alibaba.fastjson.JSON;
-
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.Feature;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -73,10 +65,8 @@ public class EasyRpcDecoder extends LengthFieldBasedFrameDecoder {
         // 读取消息
         byte[] msgByte = new byte[contentLength];
         decode.readBytes(msgByte);
-
+        decode.release();
         // 将消息转成实体类 传递给下面的数据处理器
-
         return msgType == 0 ? EncryptUtil.remoteMsgToRequest(encryptSequence,msgByte) : EncryptUtil.remoteMsgToResponse(encryptSequence,msgByte);
-//        return msgType == 0 ? JSONObject.parseObject(new String(msgByte), EasyRpcRequest.class) : JSONObject.parseObject(new String(msgByte), EasyRpcResponse.class);
     }
 }

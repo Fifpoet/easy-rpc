@@ -36,7 +36,7 @@ public class EasyRpcServer implements Runnable{
     public void rpcServerStart(){
         try {
             bossGroup = new NioEventLoopGroup(2);
-            workerGroup = new NioEventLoopGroup(8);
+            workerGroup = new NioEventLoopGroup(16);
             // 服务端启动类
             ServerBootstrap bootstrap = new ServerBootstrap();
             // 传入两个线程组

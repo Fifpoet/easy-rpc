@@ -36,16 +36,16 @@ public class EncryptUtil {
         return SecureUtil.aes(AES_KEYS[keyIndex].getBytes()).encrypt(msg);
     }
 
-    public static String decryptMsg(int keyIndex,byte[] msg){
-        return SecureUtil.aes(AES_KEYS[keyIndex].getBytes()).decryptStr(msg);
+    public static byte[] decryptMsg(int keyIndex,byte[] msg){
+        return SecureUtil.aes(AES_KEYS[keyIndex].getBytes()).decrypt(msg);
     }
 
 
     public static EasyRpcResponse remoteMsgToResponse(int keyIndex,byte[] msg){
-        return JSONObject.parseObject(decryptMsg(keyIndex, msg),EasyRpcResponse.class);
+        return (EasyRpcResponse) HessianUtils.parseObject(decryptMsg(keyIndex, msg));
     }
 
     public static EasyRpcRequest remoteMsgToRequest(int keyIndex, byte[] msg){
-        return JSONObject.parseObject(decryptMsg(keyIndex, msg),EasyRpcRequest.class);
+        return (EasyRpcRequest)HessianUtils.parseObject(decryptMsg(keyIndex, msg));
     }
 }

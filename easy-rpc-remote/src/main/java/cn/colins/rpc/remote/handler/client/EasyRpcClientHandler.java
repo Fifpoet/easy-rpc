@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +31,15 @@ public class EasyRpcClientHandler extends SimpleChannelInboundHandler<EasyRpcRes
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, EasyRpcResponse rpcResponse) throws Exception {
-        // 可以异步处理
-        SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
-        if(requestCache!=null){
-            requestCache.setResponse(rpcResponse);
+        try{
+            // 可以异步处理
+            SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
+            if(requestCache!=null){
+                requestCache.setResponse(rpcResponse);
+            }
+        }finally {
+            //释放
+            ReferenceCountUtil.release(rpcResponse);
         }
 
     }

@@ -46,6 +46,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
                 String interfaces = field.getType().toString().split(" ")[1];
                 try {
                     field.setAccessible(true);
+                    // 注入一个动态代理对象
                     field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceId, beanRef,interfaces));
                     // 添加需要订阅的服务
                     EasyRpcSpringConstant.serviceIdList.add(serviceId);

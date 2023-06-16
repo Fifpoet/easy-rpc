@@ -1,10 +1,13 @@
 package cn.colins.rpc.remote.context;
 
 
+import cn.colins.rpc.remote.EasyRpcClient;
 import cn.colins.rpc.remote.future.impl.SyncEasyRpcWriteFuture;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.netty.channel.ChannelFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @Date 2023/6/12
  */
 public class EasyRpcRemoteContext {
+    private final static Logger log= LoggerFactory.getLogger(EasyRpcRemoteContext.class);
 
     /**
      * 客户端调用实例通道缓存

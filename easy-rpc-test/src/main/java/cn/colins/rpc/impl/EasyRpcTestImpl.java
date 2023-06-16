@@ -1,7 +1,11 @@
 package cn.colins.rpc.impl;
 
 import cn.colins.rpc.EasyRpcTest;
+import cn.colins.rpc.entiy.UserInfo;
 import cn.colins.rpc.sdk.annotation.EasyRpcServicePublish;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description
@@ -18,7 +22,39 @@ public class EasyRpcTestImpl implements EasyRpcTest {
     }
 
     @Override
-    public String test1(String aa) {
-        return aa;
+    public String test1(UserInfo userInfo) {
+        return "ok";
+    }
+
+    @Override
+    public UserInfo test2(Integer id) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName("");
+        userInfo.setAge(0);
+        userInfo.setHobby("");
+        userInfo.setAddress("");
+        userInfo.setWork("");
+        userInfo.setSex(0);
+        userInfo.setIdCard("");
+        userInfo.setPhone("");
+        return userInfo;
+    }
+
+    @Override
+    public List<UserInfo> test3() {
+        List<UserInfo> userInfos=new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setName("");
+            userInfo.setAge(0);
+            userInfo.setHobby("");
+            userInfo.setAddress("");
+            userInfo.setWork("");
+            userInfo.setSex(0);
+            userInfo.setIdCard("");
+            userInfo.setPhone("");
+            userInfos.add(userInfo);
+        }
+        return userInfos;
     }
 }

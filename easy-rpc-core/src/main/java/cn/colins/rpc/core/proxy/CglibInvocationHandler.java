@@ -46,6 +46,7 @@ public class CglibInvocationHandler implements InvocationHandler {
         EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(),beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
         // 获取会话
         EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(serviceId, easyRpcRequest, serviceInstanceList);
+        // 会话执行调用
         return easyRpcSession.exec();
     }
 }
