@@ -1,17 +1,17 @@
 package cn.colins.rpc.remote.future.impl;
 
+import cn.colins.rpc.common.entiy.EasyRpcRequest;
+import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
 import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.entiy.EasyRpcResponse;
 import cn.colins.rpc.remote.future.EasyRpcWriteFuture;
-import cn.colins.rpc.remote.handler.EasyRpcServerHandlerInit;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @Description
@@ -22,7 +22,7 @@ import java.util.concurrent.*;
  */
 public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcResponse> {
 
-    private static final Logger log = LoggerFactory.getLogger(EasyRpcServerHandlerInit.class);
+    private static final Logger log = LoggerFactory.getLogger(SyncEasyRpcWriteFuture.class);
 
 
     private CountDownLatch latch;
@@ -58,7 +58,6 @@ public class SyncEasyRpcWriteFuture implements EasyRpcWriteFuture<EasyRpcRespons
     @Override
     public EasyRpcResponse write(ChannelFuture channelFuture, EasyRpcRequest easyRpcRequest) throws TimeoutException, InterruptedException {
         EasyRpcRemoteContext.addRequestCache(easyRpcRequest.getRequestId(),this);
-        log.info("{},{},{}",channelFuture==null , easyRpcRequest );
         channelFuture.channel().writeAndFlush(new RpcRemoteMsg(easyRpcRequest));
         EasyRpcResponse easyRpcResponse = isTimeout ? this.get(timeout, TimeUnit.MILLISECONDS) : this.get();
         return easyRpcResponse;

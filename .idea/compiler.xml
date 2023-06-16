@@ -11,6 +11,7 @@
         <module name="easy-rpc-core" />
         <module name="easy-rpc-remote" />
         <module name="easy-rpc-test" />
+        <module name="easy-rpc-common" />
       </profile>
     </annotationProcessing>
   </component>

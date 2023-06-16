@@ -1,10 +1,8 @@
 package cn.colins.rpc.remote;
 
-import cn.colins.rpc.remote.codec.domain.RpcRemoteMsg;
+import cn.colins.rpc.common.exception.EasyRpcException;
+import cn.colins.rpc.common.exception.EasyRpcRunException;
 import cn.colins.rpc.remote.config.EasyRpcClientConfig;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.exception.EasyRpcRemoteException;
-import cn.colins.rpc.remote.exception.EasyRpcRemoteRunException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,8 +12,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -60,7 +56,7 @@ public class EasyRpcClient implements Runnable{
             if (event.isSuccess()) {
                 log.info("连接Easy-Rpc Server 成功,地址：{},端口：{}", rpcClientConfig.getAddress(), rpcClientConfig.getPort());
             } else {
-                throw new EasyRpcRemoteException(String.format("Easy-Rpc connect server:[ %s:%d ] fail",rpcClientConfig.getAddress(), rpcClientConfig.getPort()));
+                throw new EasyRpcException(String.format("Easy-Rpc connect server:[ %s:%d ] fail",rpcClientConfig.getAddress(), rpcClientConfig.getPort()));
             }
         });
         return future;
@@ -81,7 +77,7 @@ public class EasyRpcClient implements Runnable{
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("Easy-Rpc Client start error：{},{}", e.getMessage(), e);
-            throw new EasyRpcRemoteRunException(e.getMessage());
+            throw new EasyRpcRunException(e.getMessage());
         }finally {
             destroy();
         }

@@ -1,5 +1,5 @@
 
-package cn.colins.rpc.remote.entiy;
+package cn.colins.rpc.common.entiy;
 
 
 /**

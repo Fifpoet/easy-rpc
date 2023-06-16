@@ -1,9 +1,10 @@
 package cn.colins.rpc.sdk.spring.processor;
 
+import cn.colins.rpc.common.exception.EasyRpcException;
+import cn.colins.rpc.common.exception.EasyRpcRunException;
 import cn.colins.rpc.core.proxy.CglibInvokeBeanProxyFactory;
 import cn.colins.rpc.remote.EasyRpcClient;
 import cn.colins.rpc.sdk.annotation.EasyRpcServiceInvoke;
-import cn.colins.rpc.sdk.exception.EasyRpcSpringException;
 import cn.colins.rpc.sdk.spring.constant.EasyRpcSpringConstant;
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
                     EasyRpcSpringConstant.serviceIdList.add(serviceId);
                 } catch (Exception e) {
                     log.error("Easy-Rpc bean:[{}] set field:[{}] error:{}", bean.getClass(), field.getName(), e.getMessage(), e);
-                    throw new EasyRpcSpringException(e.getMessage());
+                    throw new EasyRpcRunException(e.getMessage());
                 }
             }
         });

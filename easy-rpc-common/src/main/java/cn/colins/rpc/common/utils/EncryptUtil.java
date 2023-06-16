@@ -1,17 +1,12 @@
-package cn.colins.rpc.remote.utils;
+package cn.colins.rpc.common.utils;
 
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.entiy.EasyRpcResponse;
+
+import cn.colins.rpc.common.entiy.EasyRpcRequest;
+import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Description
@@ -41,7 +36,7 @@ public class EncryptUtil {
     }
 
 
-    public static EasyRpcResponse remoteMsgToResponse(int keyIndex,byte[] msg){
+    public static EasyRpcResponse remoteMsgToResponse(int keyIndex, byte[] msg){
         return (EasyRpcResponse) HessianUtils.parseObject(decryptMsg(keyIndex, msg));
     }
 

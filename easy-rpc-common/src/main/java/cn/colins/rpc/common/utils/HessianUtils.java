@@ -1,14 +1,12 @@
-package cn.colins.rpc.remote.utils;
+package cn.colins.rpc.common.utils;
 
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.exception.EasyRpcRemoteRunException;
+
+import cn.colins.rpc.common.exception.EasyRpcRunException;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
-import com.caucho.hessian.io.HessianOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @Description
@@ -29,7 +27,7 @@ public class HessianUtils {
             bis.close();
             return o;
         }catch (Exception e){
-            throw new EasyRpcRemoteRunException(e.getMessage());
+            throw new EasyRpcRunException(e.getMessage());
         }
     }
 
@@ -44,7 +42,7 @@ public class HessianUtils {
             os.close();
             return data;
         }catch (Exception e){
-            throw new EasyRpcRemoteRunException(e.getMessage());
+            throw new EasyRpcRunException(e.getMessage());
         }
     }
 }

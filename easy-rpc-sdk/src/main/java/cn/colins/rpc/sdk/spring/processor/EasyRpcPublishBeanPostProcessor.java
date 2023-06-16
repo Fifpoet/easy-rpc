@@ -1,9 +1,9 @@
 package cn.colins.rpc.sdk.spring.processor;
 
+import cn.colins.rpc.common.exception.EasyRpcRunException;
 import cn.colins.rpc.core.domain.ServiceMetaData;
 import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import cn.colins.rpc.sdk.annotation.EasyRpcServicePublish;
-import cn.colins.rpc.sdk.exception.EasyRpcSpringException;
 import cn.colins.rpc.sdk.spring.constant.EasyRpcSpringConstant;
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class EasyRpcPublishBeanPostProcessor implements InstantiationAwareBeanPo
             beanName= StrUtil.isEmpty(annotation.beanRefName()) ? beanName : annotation.beanRefName();
             Class<?>[] interfaces = bean.getClass().getInterfaces();
             if (interfaces == null || interfaces.length == 0 || interfaces.length > 1) {
-                throw new EasyRpcSpringException(String.format("[ %s ] It is impossible not to implement or implement multiple interfaces ", beanName));
+                throw new EasyRpcRunException(String.format("[ %s ] It is impossible not to implement or implement multiple interfaces ", beanName));
             }
             // 添加发布服务bean 缓存
             EasyRpcRemoteContext.registerProducerCache(beanName,bean);

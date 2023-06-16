@@ -12,6 +12,7 @@
         <module>easy-rpc-remote</module>
         <module>easy-rpc-sdk</module>
         <module>easy-rpc-core</module>
+        <module>easy-rpc-common</module>
     </modules>
 
     <dependencies>

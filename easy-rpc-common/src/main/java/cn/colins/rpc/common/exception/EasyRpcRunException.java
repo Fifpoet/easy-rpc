@@ -1,4 +1,4 @@
-package cn.colins.rpc.core.exception;
+package cn.colins.rpc.common.exception;
 
 /**
  * @Description
@@ -7,12 +7,12 @@ package cn.colins.rpc.core.exception;
  * @Since 1.0
  * @Date 2023/6/13
  */
-public class EasyRpcException extends Exception {
+public class EasyRpcRunException extends RuntimeException {
 
 
     String errorMessage;
 
-    public EasyRpcException(String errorMessage){
+    public EasyRpcRunException(String errorMessage){
         this.errorMessage = errorMessage;
     }
 

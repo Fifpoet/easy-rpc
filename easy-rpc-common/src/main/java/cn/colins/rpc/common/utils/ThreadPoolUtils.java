@@ -1,4 +1,4 @@
-package cn.colins.rpc.remote.utils;
+package cn.colins.rpc.common.utils;
 
 import java.util.concurrent.*;
 

@@ -1,8 +1,7 @@
 package cn.colins.rpc.core.session;
 
 import cn.colins.rpc.core.domain.ServiceInstance;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.entiy.EasyRpcResponse;
+import cn.colins.rpc.common.entiy.EasyRpcRequest;
 
 /**
  * @program: easy-rpc

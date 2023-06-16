@@ -1,11 +1,12 @@
 package cn.colins.rpc.core.proxy;
 
+import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.core.cache.EasyRpcInstanceCache;
 import cn.colins.rpc.core.domain.ServiceInstance;
-import cn.colins.rpc.core.exception.EasyRpcException;
+
 import cn.colins.rpc.core.session.EasyRpcSession;
 import cn.colins.rpc.core.session.EasyRpcSessionFactory;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
+import cn.colins.rpc.common.entiy.EasyRpcRequest;
 import cn.hutool.core.collection.CollectionUtil;
 import net.sf.cglib.proxy.InvocationHandler;
 

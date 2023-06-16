@@ -3,8 +3,8 @@ package cn.colins.rpc.core.session.defaults;
 import cn.colins.rpc.core.domain.ServiceInstance;
 import cn.colins.rpc.core.executor.EasyRpcExecutor;
 import cn.colins.rpc.core.session.EasyRpcSession;
-import cn.colins.rpc.remote.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.entiy.EasyRpcResponse;
+import cn.colins.rpc.common.entiy.EasyRpcRequest;
+import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import io.netty.channel.ChannelFuture;
 
 /**
