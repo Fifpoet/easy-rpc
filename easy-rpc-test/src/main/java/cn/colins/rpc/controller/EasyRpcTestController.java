@@ -6,6 +6,7 @@ import cn.colins.rpc.sdk.annotation.EasyRpcServiceInvoke;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -18,8 +19,13 @@ import java.util.List;
 @RestController
 public class EasyRpcTestController {
 
+    // 调用远程服务
     @EasyRpcServiceInvoke( serviceId = "Test")
     private EasyRpcTest easyRpcTest;
+
+    // 调用本地
+    @Resource
+    private EasyRpcTest localEasyRpcTest;
 
     // 无传参 无返回测试
     @GetMapping("/test")
