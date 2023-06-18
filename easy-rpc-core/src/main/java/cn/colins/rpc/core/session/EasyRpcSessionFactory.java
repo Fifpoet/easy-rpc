@@ -40,43 +40,21 @@ public class EasyRpcSessionFactory {
 
     }
 
-    public EasyRpcSession openSession(String serviceId, EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList) {
+    public EasyRpcSession openSession(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList) {
 
         // 负载、路由、、、、拓展点 SPI机制
         ServiceInstance serviceInstance = serviceInstanceList.get(0);
         // 获取通信管道
-        ChannelFuture channelFuture = EasyRpcRemoteContext.getClientChannel(serviceId);
+        ChannelFuture channelFuture = EasyRpcRemoteContext.getClientChannel(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()));
         if (channelFuture == null) {
-            channelFuture = getChannelFuture(serviceId, serviceInstance);
+            channelFuture = getChannelFuture(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()), serviceInstance);
         }
         // session里面就是调用执行器执行  可以拓展过滤器、集群策略
         return new DefaultEasyRpcSession(new BaseEasyRpcExecutor(), rpcRequest, serviceInstance, channelFuture);
     }
 
-
-//    private ChannelFuture getChannelFuture(String serviceId, ServiceInstance serviceInstance) {
-//        ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(serviceId);
-//        if (clientChannel == null) {
-//            synchronized (serviceInstance) {
-//                if (clientChannel == null && EasyRpcRemoteContext.getClientChannel(serviceId)==null) {
-//                    EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
-//                    easyRpcClientConfig.setAddress(serviceInstance.getIp());
-//                    easyRpcClientConfig.setPort(serviceInstance.getPort());
-//                    EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig, new EasyRpcClientHandlerInit());
-//                    ChannelFuture connect = easyRpcClient.connect();
-//                    // 异步等待关闭
-//                    ThreadPoolUtils.startNettyPool.execute(easyRpcClient);
-//                    // 添加缓存
-//                    EasyRpcRemoteContext.registerClientChannel(serviceId, connect);
-//                    return connect;
-//                }
-//            }
-//        }
-//        return clientChannel;
-//    }
-
-    private synchronized ChannelFuture getChannelFuture(String serviceId, ServiceInstance serviceInstance) {
-        ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(serviceId);
+    private synchronized ChannelFuture getChannelFuture(String instanceInfo, ServiceInstance serviceInstance) {
+        ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(instanceInfo);
         if (clientChannel == null) {
             EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
             easyRpcClientConfig.setAddress(serviceInstance.getIp());
@@ -86,7 +64,7 @@ public class EasyRpcSessionFactory {
             // 异步等待关闭
             ThreadPoolUtils.startNettyPool.execute(easyRpcClient);
             // 添加缓存
-            EasyRpcRemoteContext.registerClientChannel(serviceId, connect);
+            EasyRpcRemoteContext.registerClientChannel(instanceInfo, connect);
             return connect;
         }
         return clientChannel;

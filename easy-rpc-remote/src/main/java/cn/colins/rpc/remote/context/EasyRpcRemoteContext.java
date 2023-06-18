@@ -52,12 +52,12 @@ public class EasyRpcRemoteContext {
      */
     public static Map<String, SyncEasyRpcWriteFuture> CLIENT_REQUEST_CACHE = new ConcurrentHashMap<>(1024);
 
-    public static void registerClientChannel(String serverId, ChannelFuture channel) {
-        CLIENT_CHANNEL_CACHE.put(serverId, channel);
+    public static void registerClientChannel(String instanceInfo, ChannelFuture channel) {
+        CLIENT_CHANNEL_CACHE.put(instanceInfo, channel);
     }
 
-    public static ChannelFuture getClientChannel(String serverId) {
-        return CLIENT_CHANNEL_CACHE.get(serverId);
+    public static ChannelFuture getClientChannel(String instanceInfo) {
+        return CLIENT_CHANNEL_CACHE.get(instanceInfo);
     }
 
     public static void registerProducerCache(String beanName, Object producerBen) {

@@ -40,13 +40,13 @@ public class CglibInvocationHandler implements InvocationHandler {
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
         List<ServiceInstance> serviceInstanceList = EasyRpcInstanceCache.getServiceInstanceList(serviceId);
         if (CollectionUtil.isEmpty(serviceInstanceList)) {
-            throw new EasyRpcException(String.format("[ %d ] No corresponding service found ", serviceId));
+            throw new EasyRpcException(String.format("[ %s ] No corresponding service found ", serviceId));
         }
 
         // 构建请求参数
         EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(),beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
         // 获取会话
-        EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(serviceId, easyRpcRequest, serviceInstanceList);
+        EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(easyRpcRequest, serviceInstanceList);
         // 会话执行调用
         return easyRpcSession.exec();
     }
