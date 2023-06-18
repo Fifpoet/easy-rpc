@@ -1,5 +1,7 @@
 package cn.colins.rpc.remote;
 
+import cn.colins.rpc.common.exception.EasyRpcException;
+import cn.colins.rpc.common.utils.ThreadPoolUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -53,15 +55,19 @@ public class EasyRpcServer implements Runnable{
             ChannelFuture future = bootstrap.bind().sync();
             if (future.isSuccess()) {
                 log.info("启动 Easy-Rpc Server 成功,端口：{}", port);
+                Thread.sleep(5000);
+                throw new EasyRpcException("test down ");
             }
             future.channel().closeFuture().sync();
         } catch (Exception e) {
-            log.error("Easy-Rpc server start error:{},{}", e.getMessage(), e);
+            log.error("Easy-Rpc server start error:{}", e.getMessage(), e);
+            // 服务端一旦发生异常则需要重新启动
+            // 之前的资源释放
+            ThreadPoolUtils.startNettyPool.execute(new EasyRpcServer(port,channelInitializer));
         } finally {
             log.info("Easy-Rpc Server shutdown");
             // 优雅的关闭 释放资源
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
+            destroy();
         }
     }
 

@@ -60,6 +60,10 @@ public class EasyRpcRemoteContext {
         return CLIENT_CHANNEL_CACHE.get(instanceInfo);
     }
 
+    public static ChannelFuture removeClientChannel(String instanceInfo) {
+        return CLIENT_CHANNEL_CACHE.remove(instanceInfo);
+    }
+
     public static void registerProducerCache(String beanName, Object producerBen) {
         PRODUCER_BEAN_CACHE.put(beanName, producerBen);
     }

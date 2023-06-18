@@ -40,7 +40,8 @@ public class RemoteTest {
     @Test
     public void serverTest() {
         EasyRpcServer easyRpcServer = new EasyRpcServer(1111, new EasyRpcServerHandlerInit());
-        easyRpcServer.rpcServerStart();
+        Executors.newCachedThreadPool().execute(easyRpcServer);
+        while (true){}
     }
 
     @Test

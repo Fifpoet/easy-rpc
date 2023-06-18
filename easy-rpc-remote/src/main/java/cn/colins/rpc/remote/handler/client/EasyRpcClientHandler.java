@@ -46,6 +46,8 @@ public class EasyRpcClientHandler extends SimpleChannelInboundHandler<EasyRpcRes
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("客户端->[ {} ]服务端发生异常下线：{}",ctx.channel().remoteAddress(),cause.getMessage());
+        log.error("[{}] 服务端发生异常下线：{}",ctx.channel().remoteAddress(),cause.getMessage(),cause);
+        // 需要移除通信管道
+        EasyRpcRemoteContext.removeClientChannel(ctx.channel().remoteAddress().toString().replace("/",""));
     }
 }

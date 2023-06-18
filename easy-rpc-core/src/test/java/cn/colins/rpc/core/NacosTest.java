@@ -1,5 +1,6 @@
 package cn.colins.rpc.core;
 
+import cn.colins.rpc.core.task.EasyRpcRetryTask;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingFactory;
@@ -86,5 +87,11 @@ public class NacosTest {
         log.info("获取配置:{}", JSONObject.toJSON(allInstances));
 
 
+    }
+
+    @Test
+    public void retryTest(){
+        Executors.newCachedThreadPool().execute(new EasyRpcRetryTask(new TestRetry()));
+        while (true){}
     }
 }
