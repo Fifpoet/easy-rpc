@@ -1,5 +1,6 @@
 package cn.colins.rpc.core.proxy;
 
+import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.core.cache.EasyRpcInstanceCache;
 import cn.colins.rpc.core.domain.ServiceInstance;
@@ -24,29 +25,26 @@ import java.util.UUID;
 public class CglibInvocationHandler implements InvocationHandler {
 
 
-    private final String serviceId;
-
-    private final String beanRef;
+    private final EasyRpcInvokeInfo invokeInfo;
 
     private final String interfaces;
 
-    public CglibInvocationHandler(String serviceId, String beanRef, String interfaces) {
-        this.serviceId = serviceId;
-        this.beanRef = beanRef;
+    public CglibInvocationHandler(EasyRpcInvokeInfo invokeInfo, String interfaces) {
+        this.invokeInfo = invokeInfo;
         this.interfaces = interfaces;
     }
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        List<ServiceInstance> serviceInstanceList = EasyRpcInstanceCache.getServiceInstanceList(serviceId);
+        List<ServiceInstance> serviceInstanceList = EasyRpcInstanceCache.getServiceInstanceList(invokeInfo.getServiceId());
         if (CollectionUtil.isEmpty(serviceInstanceList)) {
-            throw new EasyRpcException(String.format("[ %s ] No corresponding service found ", serviceId));
+            throw new EasyRpcException(String.format("[ %s ] No corresponding service found ", invokeInfo.getServiceId()));
         }
 
         // 构建请求参数
-        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(),beanRef, interfaces, method.getName(), method.getParameterTypes(), objects);
+        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(), invokeInfo.getBeanRef(), interfaces, method.getName(), method.getParameterTypes(), objects);
         // 获取会话
-        EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(easyRpcRequest, serviceInstanceList);
+        EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(easyRpcRequest, serviceInstanceList,invokeInfo);
         // 会话执行调用
         return easyRpcSession.exec();
     }

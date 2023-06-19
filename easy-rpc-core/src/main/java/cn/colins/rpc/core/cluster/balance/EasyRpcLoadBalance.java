@@ -1,5 +1,6 @@
-package cn.colins.rpc.core;
+package cn.colins.rpc.core.cluster.balance;
 
+import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.core.domain.ServiceInstance;
 
 import java.util.List;
@@ -13,5 +14,5 @@ import java.util.List;
 public interface EasyRpcLoadBalance {
 
 
-    ServiceInstance balance(List<ServiceInstance> serviceInstances);
+    ServiceInstance balance(List<ServiceInstance> serviceInstances, EasyRpcInvokeInfo rpcInvokeInfo);
 }

@@ -1,5 +1,6 @@
 package cn.colins.rpc.core.session;
 
+import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.core.domain.ServiceInstance;
 import cn.colins.rpc.core.executor.impl.BaseEasyRpcExecutor;
 import cn.colins.rpc.core.session.defaults.DefaultEasyRpcSession;
@@ -40,7 +41,7 @@ public class EasyRpcSessionFactory {
 
     }
 
-    public EasyRpcSession openSession(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList) {
+    public EasyRpcSession openSession(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) {
 
         // 负载、路由、、、、拓展点 SPI机制
         ServiceInstance serviceInstance = serviceInstanceList.get(0);

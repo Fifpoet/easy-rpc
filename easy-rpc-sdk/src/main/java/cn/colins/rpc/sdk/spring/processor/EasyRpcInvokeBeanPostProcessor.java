@@ -1,5 +1,6 @@
 package cn.colins.rpc.sdk.spring.processor;
 
+import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.common.exception.EasyRpcRunException;
 import cn.colins.rpc.core.proxy.CglibInvokeBeanProxyFactory;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.config.InstantiationAwareBeanPostProces
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
@@ -41,21 +43,34 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
                     throw new IllegalStateException("@EasyRpcServiceInvoke annotation is not supported on static fields");
                 }
                 EasyRpcServiceInvoke annotation = AnnotationUtils.getAnnotation(field, EasyRpcServiceInvoke.class);
-                String[] split = field.getType().toString().split("\\.");
-                String beanRef = StrUtil.isEmpty(annotation.beanRefName()) ? StrUtil.lowerFirst(split[split.length-1]):annotation.beanRefName();
-                String serviceId = annotation.serviceId();
+                EasyRpcInvokeInfo serviceInvokeInfo = getServiceInvokeInfo(field, annotation);
+
                 String interfaces = field.getType().toString().split(" ")[1];
                 try {
                     field.setAccessible(true);
                     // 注入一个动态代理对象
-                    field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceId, beanRef,interfaces));
+                    field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceInvokeInfo , interfaces));
                     // 添加需要订阅的服务
-                    EasyRpcSpringConstant.serviceIdList.add(serviceId);
+                    EasyRpcSpringConstant.serviceIdList.add(serviceInvokeInfo.getServiceId());
                 } catch (Exception e) {
                     log.error("Easy-Rpc bean:[{}] set field:[{}] error:{}", bean.getClass(), field.getName(), e.getMessage(), e);
                     throw new EasyRpcRunException(e.getMessage());
                 }
             }
         });
+    }
+
+    private EasyRpcInvokeInfo getServiceInvokeInfo(Field field, EasyRpcServiceInvoke annotation) {
+        String[] split = field.getType().toString().split("\\.");
+        String beanRef = StrUtil.isEmpty(annotation.beanRefName()) ? StrUtil.lowerFirst(split[split.length - 1]) : annotation.beanRefName();
+        String serviceId = annotation.serviceId();
+        EasyRpcInvokeInfo easyRpcInvokeInfo = new EasyRpcInvokeInfo();
+        easyRpcInvokeInfo.setBeanRef(beanRef);
+        easyRpcInvokeInfo.setServiceId(serviceId);
+        easyRpcInvokeInfo.setVersion(annotation.version());
+        easyRpcInvokeInfo.setLoadBalance(annotation.loadBalance());
+        easyRpcInvokeInfo.setRouter(annotation.router());
+        easyRpcInvokeInfo.setWeight(annotation.weight());
+        return easyRpcInvokeInfo;
     }
 }
