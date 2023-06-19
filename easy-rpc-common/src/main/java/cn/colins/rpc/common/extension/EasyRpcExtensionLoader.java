@@ -1,8 +1,6 @@
-package cn.colins.rpc.core.extension;
+package cn.colins.rpc.common.extension;
 
-import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.common.exception.EasyRpcRunException;
-import cn.colins.rpc.core.EasyRpcLoadBalance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +8,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @program: easy-rpc
@@ -167,9 +164,4 @@ public class EasyRpcExtensionLoader<T> {
         return urlResource;
     }
 
-    public static void main(String[] args) throws IOException {
-        EasyRpcExtensionLoader<EasyRpcLoadBalance> extensionLoader = EasyRpcExtensionLoader.getExtensionLoader(EasyRpcLoadBalance.class);
-        EasyRpcLoadBalance testBalance = extensionLoader.getExtensionByAlias("testBalance");
-        testBalance.balance(new ArrayList<>());
-    }
 }

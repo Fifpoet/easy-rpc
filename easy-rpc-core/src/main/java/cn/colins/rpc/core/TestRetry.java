@@ -1,6 +1,6 @@
 package cn.colins.rpc.core;
 
-import cn.colins.rpc.core.task.EasyRpcRetry;
+import cn.colins.rpc.common.task.EasyRpcRetry;
 
 /**
  * @program: easy-rpc
@@ -9,8 +9,14 @@ import cn.colins.rpc.core.task.EasyRpcRetry;
  * @create: 2023-06-18 22:56
  **/
 public class TestRetry implements EasyRpcRetry {
+
     @Override
-    public boolean result() {
+    public boolean exeResult() {
         return false;
+    }
+
+    @Override
+    public void exeAfterHandler() {
+
     }
 }

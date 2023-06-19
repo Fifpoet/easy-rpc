@@ -1,5 +1,6 @@
 package cn.colins.rpc.sdk.spring.event;
 
+import cn.colins.rpc.common.task.EasyRpcRetryTask;
 import cn.colins.rpc.core.center.EasyRpcCenter;
 import cn.colins.rpc.core.domain.ServiceInstance;
 
@@ -36,7 +37,7 @@ public class EasyRpcStartEvent implements ApplicationListener<ContextRefreshedEv
         // 发布服务
         rpcCenter.registerInstance(new ServiceInstance(rpcConfig.getProtocol().getPort(), EasyRpcSpringConstant.serviceMetaDataList));
         // 订阅服务
-        EasyRpcSpringConstant.serviceIdList.forEach(item->{
+        EasyRpcSpringConstant.serviceIdList.forEach(item -> {
             rpcCenter.subscribeInstance(item);
         });
     }

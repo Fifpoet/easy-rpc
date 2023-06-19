@@ -1,12 +1,9 @@
-package cn.colins.rpc.core.task;
+package cn.colins.rpc.common.task;
 
 import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.common.exception.EasyRpcRunException;
-import cn.colins.rpc.remote.EasyRpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Callable;
 
 /**
  * @program: easy-rpc
@@ -62,16 +59,17 @@ public class EasyRpcRetryTask implements Runnable {
 
             log.warn("Easy-Rpc the {} retry start", currentRetryNum);
 
-            if(task.result()){
+            if(task.exeResult()){
                 // 成功就重置重试次数
                 currentRetryNum=1;
                 retryStatus=true;
+                task.exeAfterHandler();
                 break;
             }
             // 失败
             currentRetryNum++;
         }
-
+        // 到了这说明一次重试结束了
         if(!retryStatus){
             throw new EasyRpcRunException("Easy-Rpc ("+ task.getClass() +")  retry fail");
         }
