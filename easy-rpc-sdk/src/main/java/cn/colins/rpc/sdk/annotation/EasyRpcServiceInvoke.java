@@ -12,12 +12,10 @@ public @interface EasyRpcServiceInvoke {
 
     String beanRefName() default "";
 
-    int weight() default 1;
-
-    String loadBalance() default "";
+    String loadBalance() default "random";
 
     String version() default "";
 
-    String router() default "";
+    String router() default "versionRouter";
 
 }

@@ -7,9 +7,9 @@ package cn.colins.rpc.common.entiy;
  * @create: 2023-06-19 22:50
  **/
 public class EasyRpcInvokeInfo {
+    private String interfaceName;
     private String beanRef;
     private String serviceId;
-    private int weight;
     private String version;
     private String loadBalance;
     private String router;
@@ -55,11 +55,12 @@ public class EasyRpcInvokeInfo {
         this.router = router;
     }
 
-    public int getWeight() {
-        return weight;
+
+    public String getInterfaceName() {
+        return interfaceName;
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 }

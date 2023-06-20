@@ -12,35 +12,70 @@ import java.util.Objects;
  */
 public class ServiceMetaData {
 
-    Class<?> interfaceClass;
+    private String interfaceName;
 
     private String beanRefName;
 
-    public ServiceMetaData(Class<?> interfaceClass, String beanRefName) {
+    private String version;
+
+    private int weight;
+
+    public ServiceMetaData(){
+
+    }
+
+    public ServiceMetaData(String interfaceName, String beanRefName, int weight, String version) {
         this.beanRefName = beanRefName;
-        this.interfaceClass = interfaceClass;
-    }
-
-    public String getBeanRef() {
-        return beanRefName;
+        this.interfaceName = interfaceName;
+        this.weight = weight;
+        this.version = version;
     }
 
 
-    public Class<?> getInterfaceClass() {
-        return interfaceClass;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServiceMetaData that = (ServiceMetaData) o;
-        return Objects.equals(interfaceClass, that.interfaceClass) &&
+        return Objects.equals(interfaceName, that.interfaceName) &&
                 Objects.equals(beanRefName, that.beanRefName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(interfaceClass, beanRefName);
+        return Objects.hash(interfaceName, beanRefName);
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public String getBeanRefName() {
+        return beanRefName;
+    }
+
+    public void setBeanRefName(String beanRefName) {
+        this.beanRefName = beanRefName;
+    }
+
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 }

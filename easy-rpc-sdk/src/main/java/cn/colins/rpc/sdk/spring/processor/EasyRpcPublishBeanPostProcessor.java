@@ -35,7 +35,7 @@ public class EasyRpcPublishBeanPostProcessor implements InstantiationAwareBeanPo
             EasyRpcRemoteContext.registerProducerCache(beanName,bean);
             EasyRpcRemoteContext.registerProducerTypeCache(beanName,interfaces[0].getName());
             // 添加需要发布的元数据
-            EasyRpcSpringConstant.serviceMetaDataList.add(new ServiceMetaData(interfaces[0],beanName));
+            EasyRpcSpringConstant.serviceMetaDataList.add(new ServiceMetaData(interfaces[0].getName(),beanName,annotation.weight(),annotation.version()));
         }
         return bean;
     }

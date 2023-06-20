@@ -44,12 +44,10 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
                 }
                 EasyRpcServiceInvoke annotation = AnnotationUtils.getAnnotation(field, EasyRpcServiceInvoke.class);
                 EasyRpcInvokeInfo serviceInvokeInfo = getServiceInvokeInfo(field, annotation);
-
-                String interfaces = field.getType().toString().split(" ")[1];
                 try {
                     field.setAccessible(true);
                     // 注入一个动态代理对象
-                    field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceInvokeInfo , interfaces));
+                    field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceInvokeInfo));
                     // 添加需要订阅的服务
                     EasyRpcSpringConstant.serviceIdList.add(serviceInvokeInfo.getServiceId());
                 } catch (Exception e) {
@@ -62,6 +60,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
 
     private EasyRpcInvokeInfo getServiceInvokeInfo(Field field, EasyRpcServiceInvoke annotation) {
         String[] split = field.getType().toString().split("\\.");
+        String interfaces = field.getType().toString().split(" ")[1];
         String beanRef = StrUtil.isEmpty(annotation.beanRefName()) ? StrUtil.lowerFirst(split[split.length - 1]) : annotation.beanRefName();
         String serviceId = annotation.serviceId();
         EasyRpcInvokeInfo easyRpcInvokeInfo = new EasyRpcInvokeInfo();
@@ -70,7 +69,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
         easyRpcInvokeInfo.setVersion(annotation.version());
         easyRpcInvokeInfo.setLoadBalance(annotation.loadBalance());
         easyRpcInvokeInfo.setRouter(annotation.router());
-        easyRpcInvokeInfo.setWeight(annotation.weight());
+        easyRpcInvokeInfo.setInterfaceName(interfaces);
         return easyRpcInvokeInfo;
     }
 }

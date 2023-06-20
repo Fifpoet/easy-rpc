@@ -6,6 +6,8 @@ easy-rpc:
   application:
     name: Test
   center:
-    address:
-    port:
-    group:
+    address: returnac.cn
+    port: 8848
+    group: TEST
+#  protocol:
+#    port: 22222

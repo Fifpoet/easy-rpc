@@ -24,8 +24,8 @@ public class EasyRpcTestController {
     private EasyRpcTest easyRpcTest;
 
     // 调用本地
-    @Resource
-    private EasyRpcTest localEasyRpcTest;
+//    @Resource
+//    private EasyRpcTest localEasyRpcTest;
 
     // 无传参 无返回测试
     @GetMapping("/test")

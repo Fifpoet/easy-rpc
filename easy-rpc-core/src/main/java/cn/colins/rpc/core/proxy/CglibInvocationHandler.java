@@ -27,11 +27,9 @@ public class CglibInvocationHandler implements InvocationHandler {
 
     private final EasyRpcInvokeInfo invokeInfo;
 
-    private final String interfaces;
 
-    public CglibInvocationHandler(EasyRpcInvokeInfo invokeInfo, String interfaces) {
+    public CglibInvocationHandler(EasyRpcInvokeInfo invokeInfo) {
         this.invokeInfo = invokeInfo;
-        this.interfaces = interfaces;
     }
 
     @Override
@@ -40,9 +38,20 @@ public class CglibInvocationHandler implements InvocationHandler {
         if (CollectionUtil.isEmpty(serviceInstanceList)) {
             throw new EasyRpcException(String.format("[ %s ] No corresponding service found ", invokeInfo.getServiceId()));
         }
+        String methodName = method.getName();
+        Class[] paramTypes = method.getParameterTypes();
 
         // 构建请求参数
-        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(), invokeInfo.getBeanRef(), interfaces, method.getName(), method.getParameterTypes(), objects);
+        EasyRpcRequest easyRpcRequest = new EasyRpcRequest(UUID.randomUUID().toString(), invokeInfo.getBeanRef(), invokeInfo.getInterfaceName(),methodName,paramTypes, objects);
+
+        if ("toString".equals(methodName) && paramTypes.length == 0) {
+            return easyRpcRequest.toString();
+        } else if ("hashCode".equals(methodName) && paramTypes.length == 0) {
+            return easyRpcRequest.hashCode();
+        } else if ("equals".equals(methodName) && paramTypes.length == 1) {
+            return easyRpcRequest.equals(objects[0]);
+        }
+
         // 获取会话
         EasyRpcSession easyRpcSession = EasyRpcSessionFactory.getInstance().openSession(easyRpcRequest, serviceInstanceList,invokeInfo);
         // 会话执行调用

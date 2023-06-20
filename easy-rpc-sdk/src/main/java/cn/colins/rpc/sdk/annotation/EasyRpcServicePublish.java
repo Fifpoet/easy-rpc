@@ -13,4 +13,8 @@ public @interface EasyRpcServicePublish {
 
     String beanRefName() default "";
 
+    int weight() default 1;
+
+    String version() default "";
+
 }

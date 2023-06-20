@@ -108,7 +108,7 @@ public class EasyRpcServer implements EasyRpcRetry, Runnable {
         } catch (Exception e) {
             log.error("Easy-Rpc server start error:{}", e.getMessage(), e);
             // 服务端一旦发生异常则需要重新启动
-            RetryTaskUtils.taskSubmit(new EasyRpcServer(port, channelInitializer));
+            RetryTaskUtils.taskSubmit(new EasyRpcServer(port, channelInitializer),5,30);
         } finally {
             log.info("Easy-Rpc Server shutdown");
             // 优雅的关闭 释放资源

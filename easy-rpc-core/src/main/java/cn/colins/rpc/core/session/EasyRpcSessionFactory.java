@@ -1,6 +1,7 @@
 package cn.colins.rpc.core.session;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
+import cn.colins.rpc.core.cluster.EasyRpcClusterFactory;
 import cn.colins.rpc.core.domain.ServiceInstance;
 import cn.colins.rpc.core.executor.impl.BaseEasyRpcExecutor;
 import cn.colins.rpc.core.session.defaults.DefaultEasyRpcSession;
@@ -44,7 +45,9 @@ public class EasyRpcSessionFactory {
     public EasyRpcSession openSession(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) {
 
         // 负载、路由、、、、拓展点 SPI机制
-        ServiceInstance serviceInstance = serviceInstanceList.get(0);
+        List<ServiceInstance> routerStrategy = EasyRpcClusterFactory.getRouterStrategy(serviceInstanceList, invokeInfo);
+        ServiceInstance serviceInstance = EasyRpcClusterFactory.getLoadBalanceStrategy(routerStrategy, invokeInfo);
+
         // 获取通信管道
         ChannelFuture channelFuture = EasyRpcRemoteContext.getClientChannel(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()));
         if (channelFuture == null) {

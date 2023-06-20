@@ -9,6 +9,7 @@ import cn.colins.rpc.core.config.EasyRpcCenterConfig;
 import cn.colins.rpc.core.domain.ServiceInstance;
 
 import cn.colins.rpc.common.utils.ThreadPoolUtils;
+import cn.colins.rpc.core.domain.ServiceMetaData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -96,15 +97,12 @@ public class NacosEasyRpcCenter implements EasyRpcCenter {
             serviceInstanceList = new CopyOnWriteArrayList<>(new ArrayList<>(8));
             try {
                 List<Instance> allInstances = nacosNamingService.getAllInstances(serviceId, centerConfig.getGroup());
-                if(CollectionUtil.isNotEmpty(allInstances)){
-                    for(Instance instance:allInstances){
-                        serviceInstanceList.add(new ServiceInstance(instance.getIp(), instance.getPort()));
-                    }
-                }
+                // 直接把本地的全量替换
+                EasyRpcInstanceCache.updateServiceInstanceInfo(serviceId,updateInstanceCache(allInstances));
             } catch (NacosException e) {
                 log.error("Easy-Rpc -> nacos center deregister error:{}", e.getErrMsg(), e);
             }
-            EasyRpcInstanceCache.updateServiceInstanceInfo(serviceId,serviceInstanceList);
+
         }
         return serviceInstanceList;
     }
@@ -122,19 +120,27 @@ public class NacosEasyRpcCenter implements EasyRpcCenter {
                 public void onEvent(Event event) {
                     NamingEvent namingEvent = (NamingEvent) event;
                     List<Instance> allInstances = namingEvent.getInstances();
-                    List<ServiceInstance> serviceInstanceList = new CopyOnWriteArrayList<>(new ArrayList<>(8));
-                    if(CollectionUtil.isNotEmpty(allInstances)){
-                        for(Instance instance:allInstances){
-                            serviceInstanceList.add(new ServiceInstance(instance.getIp(), instance.getPort()));
-                        }
-                    }
+                    updateInstanceCache(allInstances);
+
                     // 直接把本地的全量替换
-                    EasyRpcInstanceCache.updateServiceInstanceInfo(serviceId,serviceInstanceList);
+                    EasyRpcInstanceCache.updateServiceInstanceInfo(serviceId,updateInstanceCache(allInstances));
                 }
             });
         } catch (NacosException e) {
             log.error("Easy-Rpc -> nacos center subscribe error:{}", e.getErrMsg(), e);
         }
         log.info("Easy-Rpc -> nacos center subscribe:[{}] success",serviceId);
+    }
+
+    private List<ServiceInstance> updateInstanceCache(List<Instance> allInstances) {
+        List<ServiceInstance> serviceInstanceList = new CopyOnWriteArrayList<>(new ArrayList<>(8));
+        if(CollectionUtil.isNotEmpty(allInstances)){
+            for(Instance instance:allInstances){
+                String metaData = instance.getMetadata().get(DEFAULT_META_PARAM);
+                List<ServiceMetaData> serviceMetaData = JSONObject.parseArray(metaData, ServiceMetaData.class);
+                serviceInstanceList.add(new ServiceInstance(instance.getIp(), instance.getPort(),CollectionUtil.newHashSet(serviceMetaData)));
+            }
+        }
+        return serviceInstanceList;
     }
 }

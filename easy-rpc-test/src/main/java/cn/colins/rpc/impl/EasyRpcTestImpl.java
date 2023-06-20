@@ -14,7 +14,7 @@ import java.util.List;
  * @Since 1.0
  * @Date 2023/6/14
  */
-@EasyRpcServicePublish
+@EasyRpcServicePublish()
 public class EasyRpcTestImpl implements EasyRpcTest {
     @Override
     public void test() {

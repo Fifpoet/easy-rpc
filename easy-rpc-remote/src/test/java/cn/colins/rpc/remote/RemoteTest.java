@@ -51,8 +51,8 @@ public class RemoteTest {
         easyRpcClientConfig.setAddress("127.0.0.1");
         easyRpcClientConfig.setPort(1111);
         EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig, new EasyRpcClientHandlerInit());
-        ChannelFuture connect = easyRpcClient.connect();
-        Executors.newCachedThreadPool().execute(easyRpcClient);
-        while (true){}
+//        ChannelFuture connect = easyRpcClient.connect();
+//        Executors.newCachedThreadPool().execute(easyRpcClient);
+//        while (true){}
     }
 }
