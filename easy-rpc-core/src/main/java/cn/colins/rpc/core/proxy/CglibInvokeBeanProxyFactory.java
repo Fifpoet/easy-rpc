@@ -4,8 +4,6 @@ package cn.colins.rpc.core.proxy;
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import net.sf.cglib.proxy.Enhancer;
 
-import java.lang.reflect.Proxy;
-
 /**
  * @Author czl
  * @Description 代理工厂
@@ -21,6 +19,6 @@ public class CglibInvokeBeanProxyFactory {
      * @return T
      **/
     public static <T> T getClientInvokeProxy(Class<T> interfaceClass, EasyRpcInvokeInfo invokeInfo) throws Exception {
-        return (T) Enhancer.create(interfaceClass, new CglibInvocationHandler(invokeInfo));
+        return (T) Enhancer.create(interfaceClass, new CglibBeanInvocationHandler(invokeInfo));
     }
 }

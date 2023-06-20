@@ -22,13 +22,13 @@ import java.util.UUID;
  * @Since 1.0
  * @Date 2023/6/13
  */
-public class CglibInvocationHandler implements InvocationHandler {
+public class CglibBeanInvocationHandler implements InvocationHandler {
 
 
     private final EasyRpcInvokeInfo invokeInfo;
 
 
-    public CglibInvocationHandler(EasyRpcInvokeInfo invokeInfo) {
+    public CglibBeanInvocationHandler(EasyRpcInvokeInfo invokeInfo) {
         this.invokeInfo = invokeInfo;
     }
 
