@@ -12,8 +12,4 @@ import cn.colins.rpc.common.entiy.EasyRpcRequest;
 public interface EasyRpcSession {
 
     Object exec();
-
-    EasyRpcRequest getRpcRequest();
-
-    ServiceInstance getServiceInstance();
 }

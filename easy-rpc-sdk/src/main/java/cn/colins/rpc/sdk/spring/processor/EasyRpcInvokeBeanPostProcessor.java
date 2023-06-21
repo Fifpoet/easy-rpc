@@ -1,10 +1,8 @@
 package cn.colins.rpc.sdk.spring.processor;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
-import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.common.exception.EasyRpcRunException;
-import cn.colins.rpc.core.proxy.CglibInvokeBeanProxyFactory;
-import cn.colins.rpc.remote.EasyRpcClient;
+import cn.colins.rpc.core.proxy.CglibInvokeProxyFactory;
 import cn.colins.rpc.sdk.annotation.EasyRpcServiceInvoke;
 import cn.colins.rpc.sdk.spring.constant.EasyRpcSpringConstant;
 import cn.hutool.core.util.StrUtil;
@@ -47,7 +45,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
                 try {
                     field.setAccessible(true);
                     // 注入一个动态代理对象
-                    field.set(bean, CglibInvokeBeanProxyFactory.getClientInvokeProxy(field.getType(), serviceInvokeInfo));
+                    field.set(bean, CglibInvokeProxyFactory.getClientInvokeProxy(field.getType(), serviceInvokeInfo));
                     // 添加需要订阅的服务
                     EasyRpcSpringConstant.serviceIdList.add(serviceInvokeInfo.getServiceId());
                 } catch (Exception e) {
@@ -69,6 +67,7 @@ public class EasyRpcInvokeBeanPostProcessor implements InstantiationAwareBeanPos
         easyRpcInvokeInfo.setVersion(annotation.version());
         easyRpcInvokeInfo.setLoadBalance(annotation.loadBalance());
         easyRpcInvokeInfo.setRouter(annotation.router());
+        easyRpcInvokeInfo.setCluster(annotation.cluster());
         easyRpcInvokeInfo.setInterfaceName(interfaces);
         return easyRpcInvokeInfo;
     }

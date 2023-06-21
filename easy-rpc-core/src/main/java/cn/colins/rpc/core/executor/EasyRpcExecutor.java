@@ -1,10 +1,12 @@
 package cn.colins.rpc.core.executor;
 
+import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.common.entiy.ServiceInstance;
 import cn.colins.rpc.common.entiy.EasyRpcRequest;
 import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import io.netty.channel.ChannelFuture;
 
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -15,6 +17,6 @@ import java.util.concurrent.TimeoutException;
  **/
 public interface EasyRpcExecutor {
 
-    EasyRpcResponse executor(ChannelFuture channelFuture, EasyRpcRequest easyRpcRequest, ServiceInstance serviceInstance) throws TimeoutException, InterruptedException;
+    EasyRpcResponse executor(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) throws TimeoutException, InterruptedException;
 
 }

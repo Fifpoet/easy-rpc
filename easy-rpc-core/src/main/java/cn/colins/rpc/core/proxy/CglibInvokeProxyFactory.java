@@ -2,6 +2,7 @@ package cn.colins.rpc.core.proxy;
 
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
+import cn.colins.rpc.core.cluster.strategy.EasyRpcClusterStrategy;
 import net.sf.cglib.proxy.Enhancer;
 
 /**
@@ -11,7 +12,7 @@ import net.sf.cglib.proxy.Enhancer;
  * @Param
  * @return
  **/
-public class CglibInvokeBeanProxyFactory {
+public class CglibInvokeProxyFactory {
 
     /**
      * @Author colins
@@ -20,5 +21,15 @@ public class CglibInvokeBeanProxyFactory {
      **/
     public static <T> T getClientInvokeProxy(Class<T> interfaceClass, EasyRpcInvokeInfo invokeInfo) throws Exception {
         return (T) Enhancer.create(interfaceClass, new CglibBeanInvocationHandler(invokeInfo));
+    }
+
+
+    /**
+     * @Author colins
+     * @Description  执行器代理对象
+     * @return T
+     **/
+    public static <T> T getExecutorInvokeProxy(Class<T> interfaceClass, EasyRpcClusterStrategy clusterStrategy) throws Exception {
+        return (T) Enhancer.create(interfaceClass, new CglibExecutorInvocationHandler(clusterStrategy));
     }
 }

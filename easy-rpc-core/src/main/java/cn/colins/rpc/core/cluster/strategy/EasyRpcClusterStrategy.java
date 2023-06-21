@@ -2,6 +2,7 @@ package cn.colins.rpc.core.cluster.strategy;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.common.entiy.EasyRpcRequest;
+import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import cn.colins.rpc.common.entiy.ServiceInstance;
 import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.core.executor.EasyRpcExecutor;
@@ -18,6 +19,10 @@ import java.util.concurrent.TimeoutException;
  **/
 public interface EasyRpcClusterStrategy {
 
-    EasyRpcExecutor clusterStrategy(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) throws EasyRpcException, TimeoutException, InterruptedException;
+    EasyRpcExecutor executorProxy();
+
+    void errorHandler(Exception e, EasyRpcRequest rpcRequest) throws Exception;
+
+    EasyRpcResponse invoker(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo);
 
 }

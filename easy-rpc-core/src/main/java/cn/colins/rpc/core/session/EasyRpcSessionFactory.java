@@ -40,14 +40,11 @@ public class EasyRpcSessionFactory {
 
     public EasyRpcSession openSession(EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) {
 
-        // 负载、路由、、、、拓展点 SPI机制
+        // 路由
         List<ServiceInstance> routerStrategy = EasyRpcClusterFactory.getRouterStrategy(serviceInstanceList, invokeInfo);
-        ServiceInstance serviceInstance = EasyRpcClusterFactory.getLoadBalanceStrategy(routerStrategy, invokeInfo);
 
-        // 获取通信管道
-        ChannelFuture channelFuture = EasyRpcRemoteContext.chooseClientChannel(serviceInstance);
         // session里面就是调用执行器执行  可以拓展过滤器、集群策略
-        return new DefaultEasyRpcSession(new BaseEasyRpcExecutor(), rpcRequest, serviceInstance, channelFuture);
+        return new DefaultEasyRpcSession(EasyRpcClusterFactory.getClusterStrategy(invokeInfo), rpcRequest, routerStrategy, invokeInfo);
     }
 
 

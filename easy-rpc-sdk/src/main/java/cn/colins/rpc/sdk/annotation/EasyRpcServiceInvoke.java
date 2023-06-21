@@ -18,4 +18,6 @@ public @interface EasyRpcServiceInvoke {
 
     String router() default "versionRouter";
 
+    String cluster() default "failFast";
+
 }

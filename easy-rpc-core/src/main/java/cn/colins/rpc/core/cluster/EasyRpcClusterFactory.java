@@ -6,6 +6,8 @@ import cn.colins.rpc.common.extension.EasyRpcExtensionLoader;
 import cn.colins.rpc.core.cluster.balance.EasyRpcLoadBalance;
 import cn.colins.rpc.core.cluster.route.EasyRpcRouter;
 import cn.colins.rpc.common.entiy.ServiceInstance;
+import cn.colins.rpc.core.cluster.strategy.EasyRpcClusterStrategy;
+import cn.colins.rpc.core.executor.EasyRpcExecutor;
 import cn.hutool.core.collection.CollectionUtil;
 
 import java.util.List;
@@ -49,5 +51,16 @@ public class EasyRpcClusterFactory {
         return extensionByAlias.balance(serviceInstances, invokeInfo);
     }
 
+
+    /**
+     * @Author czl
+     * @Description SPI机制选择一个集群失败策略
+     * @Date 2023/6/20 15:20
+     **/
+    public static EasyRpcExecutor getClusterStrategy(EasyRpcInvokeInfo invokeInfo){
+        EasyRpcExtensionLoader<EasyRpcClusterStrategy> extensionLoader = EasyRpcExtensionLoader.getExtensionLoader(EasyRpcClusterStrategy.class);
+        EasyRpcClusterStrategy extensionByAlias = extensionLoader.getExtensionByAlias(invokeInfo.getCluster());
+        return extensionByAlias.executorProxy();
+    }
 
 }

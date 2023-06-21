@@ -1,15 +1,14 @@
 package cn.colins.rpc.core.session.defaults;
 
-import cn.colins.rpc.common.entiy.EasyRpcResultCode;
-import cn.colins.rpc.common.entiy.ServiceInstance;
+import cn.colins.rpc.common.entiy.*;
+import cn.colins.rpc.common.exception.EasyRpcRunException;
 import cn.colins.rpc.core.executor.EasyRpcExecutor;
 import cn.colins.rpc.core.session.EasyRpcSession;
-import cn.colins.rpc.common.entiy.EasyRpcRequest;
-import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -22,40 +21,29 @@ public class DefaultEasyRpcSession implements EasyRpcSession {
     private static final Logger log = LoggerFactory.getLogger(DefaultEasyRpcSession.class);
     private EasyRpcRequest easyRpcRequest;
 
-    private ServiceInstance serviceInstance;
+    private List<ServiceInstance> serviceInstanceList;
 
-    private ChannelFuture future;
+    private EasyRpcInvokeInfo invokeInfo;
 
     public EasyRpcExecutor rpcExecutor;
 
-    public DefaultEasyRpcSession(EasyRpcExecutor rpcExecutor, EasyRpcRequest rpcRequest, ServiceInstance serviceInstance, ChannelFuture future) {
+    public DefaultEasyRpcSession(EasyRpcExecutor rpcExecutor, EasyRpcRequest rpcRequest, List<ServiceInstance> serviceInstanceList, EasyRpcInvokeInfo invokeInfo) {
         this.easyRpcRequest = rpcRequest;
+        this.serviceInstanceList = serviceInstanceList;
+        this.invokeInfo = invokeInfo;
         this.rpcExecutor = rpcExecutor;
-        this.serviceInstance = serviceInstance;
-        this.future = future;
+
     }
 
     @Override
     public Object exec() {
         try {
-            EasyRpcResponse executor = rpcExecutor.executor(future, easyRpcRequest, serviceInstance);
+            EasyRpcResponse executor = rpcExecutor.executor(easyRpcRequest, serviceInstanceList, invokeInfo);
             return executor.getData();
-        } catch (TimeoutException e) {
-            log.error("异常:{} ", e.getMessage(),e);
-            return EasyRpcResponse.error(easyRpcRequest.getRequestId(), EasyRpcResultCode.TIME_OUT,e);
         } catch (Exception e) {
             log.error("异常:{} ", e.getMessage(), e);
-            return EasyRpcResponse.error(easyRpcRequest.getRequestId(), e);
+            throw new EasyRpcRunException(e.getMessage());
         }
     }
 
-    @Override
-    public EasyRpcRequest getRpcRequest() {
-        return easyRpcRequest;
-    }
-
-    @Override
-    public ServiceInstance getServiceInstance() {
-        return serviceInstance;
-    }
 }

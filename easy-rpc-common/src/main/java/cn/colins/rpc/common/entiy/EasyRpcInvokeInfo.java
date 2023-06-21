@@ -13,6 +13,7 @@ public class EasyRpcInvokeInfo {
     private String version;
     private String loadBalance;
     private String router;
+    private String cluster;
 
 
     public String getBeanRef() {
@@ -62,5 +63,13 @@ public class EasyRpcInvokeInfo {
 
     public void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
+    }
+
+    public String getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(String cluster) {
+        this.cluster = cluster;
     }
 }
