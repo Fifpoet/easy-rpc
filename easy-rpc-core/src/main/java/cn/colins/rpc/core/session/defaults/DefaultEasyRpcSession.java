@@ -1,11 +1,16 @@
 package cn.colins.rpc.core.session.defaults;
 
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.EasyRpcResultCode;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 import cn.colins.rpc.core.executor.EasyRpcExecutor;
 import cn.colins.rpc.core.session.EasyRpcSession;
 import cn.colins.rpc.common.entiy.EasyRpcRequest;
 import cn.colins.rpc.common.entiy.EasyRpcResponse;
 import io.netty.channel.ChannelFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeoutException;
 
 /**
  * @program: easy-rpc
@@ -14,7 +19,7 @@ import io.netty.channel.ChannelFuture;
  * @create: 2023-06-13 22:51
  **/
 public class DefaultEasyRpcSession implements EasyRpcSession {
-
+    private static final Logger log = LoggerFactory.getLogger(DefaultEasyRpcSession.class);
     private EasyRpcRequest easyRpcRequest;
 
     private ServiceInstance serviceInstance;
@@ -32,8 +37,16 @@ public class DefaultEasyRpcSession implements EasyRpcSession {
 
     @Override
     public Object exec() {
-        EasyRpcResponse executor = rpcExecutor.executor(future, easyRpcRequest, serviceInstance);
-        return executor.getData();
+        try {
+            EasyRpcResponse executor = rpcExecutor.executor(future, easyRpcRequest, serviceInstance);
+            return executor.getData();
+        } catch (TimeoutException e) {
+            log.error("异常:{} ", e.getMessage(),e);
+            return EasyRpcResponse.error(easyRpcRequest.getRequestId(), EasyRpcResultCode.TIME_OUT,e);
+        } catch (Exception e) {
+            log.error("异常:{} ", e.getMessage(), e);
+            return EasyRpcResponse.error(easyRpcRequest.getRequestId(), e);
+        }
     }
 
     @Override

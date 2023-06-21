@@ -2,16 +2,12 @@ package cn.colins.rpc.core.session;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.core.cluster.EasyRpcClusterFactory;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 import cn.colins.rpc.core.executor.impl.BaseEasyRpcExecutor;
 import cn.colins.rpc.core.session.defaults.DefaultEasyRpcSession;
 
-import cn.colins.rpc.remote.EasyRpcClient;
-import cn.colins.rpc.remote.config.EasyRpcClientConfig;
-import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import cn.colins.rpc.common.entiy.EasyRpcRequest;
-import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
-import cn.colins.rpc.common.utils.ThreadPoolUtils;
+import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,29 +45,11 @@ public class EasyRpcSessionFactory {
         ServiceInstance serviceInstance = EasyRpcClusterFactory.getLoadBalanceStrategy(routerStrategy, invokeInfo);
 
         // 获取通信管道
-        ChannelFuture channelFuture = EasyRpcRemoteContext.getClientChannel(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()));
-        if (channelFuture == null) {
-            channelFuture = getChannelFuture(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()), serviceInstance);
-        }
+        ChannelFuture channelFuture = EasyRpcRemoteContext.chooseClientChannel(serviceInstance);
         // session里面就是调用执行器执行  可以拓展过滤器、集群策略
         return new DefaultEasyRpcSession(new BaseEasyRpcExecutor(), rpcRequest, serviceInstance, channelFuture);
     }
 
-    private synchronized ChannelFuture getChannelFuture(String instanceInfo, ServiceInstance serviceInstance) {
-        ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(instanceInfo);
-        if (clientChannel == null) {
-            EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
-            easyRpcClientConfig.setAddress(serviceInstance.getIp());
-            easyRpcClientConfig.setPort(serviceInstance.getPort());
-            EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig, new EasyRpcClientHandlerInit());
-            ChannelFuture connect = easyRpcClient.connect();
-            // 异步等待关闭
-            ThreadPoolUtils.startNettyPool.execute(easyRpcClient);
-            // 添加缓存
-            EasyRpcRemoteContext.registerClientChannel(instanceInfo, connect);
-            return connect;
-        }
-        return clientChannel;
-    }
+
 
 }

@@ -6,10 +6,10 @@ import cn.colins.rpc.core.cache.EasyRpcInstanceCache;
 import cn.colins.rpc.core.center.EasyRpcCenter;
 import cn.colins.rpc.core.config.EasyRpcApplicationConfig;
 import cn.colins.rpc.core.config.EasyRpcCenterConfig;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 
 import cn.colins.rpc.common.utils.ThreadPoolUtils;
-import cn.colins.rpc.core.domain.ServiceMetaData;
+import cn.colins.rpc.common.entiy.ServiceMetaData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;

@@ -3,7 +3,7 @@ package cn.colins.rpc.core.proxy;
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.common.exception.EasyRpcException;
 import cn.colins.rpc.core.cache.EasyRpcInstanceCache;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 
 import cn.colins.rpc.core.session.EasyRpcSession;
 import cn.colins.rpc.core.session.EasyRpcSessionFactory;

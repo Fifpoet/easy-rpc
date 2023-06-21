@@ -1,11 +1,10 @@
-package cn.colins.rpc.core.domain;
+package cn.colins.rpc.common.entiy;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.Set;
 
 /**

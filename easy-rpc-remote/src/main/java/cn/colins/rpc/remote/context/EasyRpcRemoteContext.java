@@ -1,8 +1,12 @@
 package cn.colins.rpc.remote.context;
 
 
+import cn.colins.rpc.common.entiy.ServiceInstance;
+import cn.colins.rpc.common.utils.ThreadPoolUtils;
 import cn.colins.rpc.remote.EasyRpcClient;
+import cn.colins.rpc.remote.config.EasyRpcClientConfig;
 import cn.colins.rpc.remote.future.impl.SyncEasyRpcWriteFuture;
+import cn.colins.rpc.remote.handler.EasyRpcClientHandlerInit;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.netty.channel.ChannelFuture;
@@ -58,6 +62,31 @@ public class EasyRpcRemoteContext {
 
     public static ChannelFuture getClientChannel(String instanceInfo) {
         return CLIENT_CHANNEL_CACHE.get(instanceInfo);
+    }
+
+    public static ChannelFuture chooseClientChannel(ServiceInstance serviceInstance){
+        ChannelFuture channelFuture = EasyRpcRemoteContext.getClientChannel(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()));
+        if (channelFuture == null) {
+            channelFuture = getChannelFuture(String.format("%s:%d",serviceInstance.getIp(),serviceInstance.getPort()), serviceInstance);
+        }
+        return channelFuture;
+    }
+
+    private static ChannelFuture getChannelFuture(String instanceInfo, ServiceInstance serviceInstance) {
+        ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(instanceInfo);
+        if (clientChannel == null) {
+            EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();
+            easyRpcClientConfig.setAddress(serviceInstance.getIp());
+            easyRpcClientConfig.setPort(serviceInstance.getPort());
+            EasyRpcClient easyRpcClient = new EasyRpcClient(easyRpcClientConfig, new EasyRpcClientHandlerInit());
+            ChannelFuture connect = easyRpcClient.connect();
+            // 异步等待关闭
+            ThreadPoolUtils.startNettyPool.execute(easyRpcClient);
+            // 添加缓存
+            EasyRpcRemoteContext.registerClientChannel(instanceInfo, connect);
+            return connect;
+        }
+        return clientChannel;
     }
 
     public static ChannelFuture removeClientChannel(String instanceInfo) {

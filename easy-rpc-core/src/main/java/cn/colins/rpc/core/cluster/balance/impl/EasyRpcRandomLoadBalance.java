@@ -2,8 +2,7 @@ package cn.colins.rpc.core.cluster.balance.impl;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
 import cn.colins.rpc.core.cluster.balance.EasyRpcAbstractLoadBalance;
-import cn.colins.rpc.core.cluster.balance.EasyRpcLoadBalance;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

@@ -1,6 +1,6 @@
 package cn.colins.rpc.core.session;
 
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 import cn.colins.rpc.common.entiy.EasyRpcRequest;
 
 /**

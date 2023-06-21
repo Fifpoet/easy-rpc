@@ -1,8 +1,7 @@
 package cn.colins.rpc.sdk.spring.event;
 
-import cn.colins.rpc.common.task.EasyRpcRetryTask;
 import cn.colins.rpc.core.center.EasyRpcCenter;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 
 import cn.colins.rpc.remote.EasyRpcServer;
 import cn.colins.rpc.remote.handler.EasyRpcServerHandlerInit;

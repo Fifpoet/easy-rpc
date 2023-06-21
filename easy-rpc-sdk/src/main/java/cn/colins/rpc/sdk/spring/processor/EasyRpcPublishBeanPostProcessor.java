@@ -1,7 +1,7 @@
 package cn.colins.rpc.sdk.spring.processor;
 
 import cn.colins.rpc.common.exception.EasyRpcRunException;
-import cn.colins.rpc.core.domain.ServiceMetaData;
+import cn.colins.rpc.common.entiy.ServiceMetaData;
 import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 import cn.colins.rpc.sdk.annotation.EasyRpcServicePublish;
 import cn.colins.rpc.sdk.spring.constant.EasyRpcSpringConstant;

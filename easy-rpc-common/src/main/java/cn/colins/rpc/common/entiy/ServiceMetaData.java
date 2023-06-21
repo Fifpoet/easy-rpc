@@ -1,6 +1,5 @@
-package cn.colins.rpc.core.domain;
+package cn.colins.rpc.common.entiy;
 
-import java.util.HashSet;
 import java.util.Objects;
 
 /**

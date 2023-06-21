@@ -1,7 +1,7 @@
 package cn.colins.rpc.core.cluster.route;
 
 import cn.colins.rpc.common.entiy.EasyRpcInvokeInfo;
-import cn.colins.rpc.core.domain.ServiceInstance;
+import cn.colins.rpc.common.entiy.ServiceInstance;
 
 import java.util.List;
 

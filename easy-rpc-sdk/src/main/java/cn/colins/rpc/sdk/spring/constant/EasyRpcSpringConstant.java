@@ -1,13 +1,9 @@
 package cn.colins.rpc.sdk.spring.constant;
 
-import cn.colins.rpc.core.domain.ServiceMetaData;
+import cn.colins.rpc.common.entiy.ServiceMetaData;
 import cn.hutool.core.collection.ConcurrentHashSet;
-import org.checkerframework.checker.units.qual.C;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @Description
