@@ -72,7 +72,7 @@ public class EasyRpcRemoteContext {
         return channelFuture;
     }
 
-    private static ChannelFuture getChannelFuture(String instanceInfo, ServiceInstance serviceInstance) {
+    private synchronized static ChannelFuture getChannelFuture(String instanceInfo, ServiceInstance serviceInstance) {
         ChannelFuture clientChannel = EasyRpcRemoteContext.getClientChannel(instanceInfo);
         if (clientChannel == null) {
             EasyRpcClientConfig easyRpcClientConfig = new EasyRpcClientConfig();

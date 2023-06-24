@@ -1,6 +1,7 @@
 package cn.colins.rpc.remote.handler.client;
 
 import cn.colins.rpc.common.entiy.EasyRpcResponse;
+import cn.colins.rpc.common.utils.ThreadPoolUtils;
 import cn.colins.rpc.remote.context.EasyRpcRemoteContext;
 
 import cn.colins.rpc.remote.future.impl.SyncEasyRpcWriteFuture;
@@ -31,17 +32,17 @@ public class EasyRpcClientHandler extends SimpleChannelInboundHandler<EasyRpcRes
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, EasyRpcResponse rpcResponse) throws Exception {
-        try{
-            // 可以异步处理
-            SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
-            if(requestCache!=null){
-                requestCache.setResponse(rpcResponse);
+        ThreadPoolUtils.nettyClientAsyncHandler.execute(()->{
+            try{
+                SyncEasyRpcWriteFuture requestCache = EasyRpcRemoteContext.getRequestCache(rpcResponse.getRequestId());
+                if(requestCache!=null){
+                    requestCache.setResponse(rpcResponse);
+                }
+            }finally {
+                //释放
+                ReferenceCountUtil.release(rpcResponse);
             }
-        }finally {
-            //释放
-            ReferenceCountUtil.release(rpcResponse);
-        }
-
+        });
     }
 
     @Override

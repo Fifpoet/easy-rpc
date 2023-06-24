@@ -63,12 +63,27 @@ public class ThreadPoolUtils {
      * @Description 给netty服务端处理使用
      **/
     public static Executor nettyServerAsyncHandler = new ThreadPoolExecutor(4, 10,
-            60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1024),
+            60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1024*10),
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
                     Thread thread = new Thread(r);
-                    thread.setName("Easy-Rpc-netty-handler");
+                    thread.setName("Easy-Rpc-Server-handler");
+                    return thread;
+                }
+            });
+
+    /**
+     * @Author czl
+     * @Description 给netty客户端处理使用
+     **/
+    public static Executor nettyClientAsyncHandler = new ThreadPoolExecutor(4, 10,
+            60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1024*10),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r);
+                    thread.setName("Easy-Rpc-Client-handler");
                     return thread;
                 }
             });
